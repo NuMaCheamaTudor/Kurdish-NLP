@@ -1,0 +1,8 @@
+spacy>=3.7
+conllu
+srsly
+thinc
+
+# Optional (for transformer-based models):
+# transformers
+# torch

@@ -1,0 +1,32 @@
+title: "Kurdish Kurmanji spaCy Pipeline"
+description: "Train a spaCy NLP pipeline for the Kurdish Kurmanji dialect using Universal Dependencies data."
+
+vars:
+  train: "data/processed/train.spacy"
+  dev: "data/processed/dev.spacy"
+  config: "configs/base.cfg"
+  output: "output"
+
+commands:
+  - name: convert
+    help: "Convert CoNLL-U files to spaCy binary format"
+    script:
+      - python scripts/convert_ud.py
+
+  - name: train
+    help: "Train the spaCy pipeline"
+    script:
+      - python -m spacy train ${vars.config} --output ${vars.output} --paths.train ${vars.train} --paths.dev ${vars.dev}
+    deps:
+      - ${vars.train}
+      - ${vars.dev}
+      - ${vars.config}
+    outputs:
+      - ${vars.output}/model-best
+
+  - name: evaluate
+    help: "Evaluate the trained model"
+    script:
+      - python scripts/evaluate.py
+    deps:
+      - ${vars.output}/model-best
