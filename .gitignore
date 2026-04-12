@@ -1,0 +1,6 @@
+*.zip 
+*.spacy 
+output/ 
+*.bin 
+*.safetensors 
+data/raw/ 
