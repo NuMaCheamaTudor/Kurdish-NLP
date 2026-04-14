@@ -1,4 +1,4 @@
-# Kurdish spaCy Model (Kurmanji) - University Project
+# Kurdish spaCy Model (Sorani) - University Project
 
 Hey there! This is my university project where I'm having a go at building a spaCy NLP pipeline for the Kurdish Kurmanji dialect. It's been a cool learning experience diving into natural language processing and exploring how it works with a language that's not as mainstream in tech.
 
