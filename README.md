@@ -1,56 +1,172 @@
-# Kurdish spaCy Model (Sorani) - University Project
+# Kurdish NLP Pipeline
 
-Hey there! This is my university project where I'm having a go at building a spaCy NLP pipeline for the Kurdish Sorani dialect. It's been a cool learning experience diving into natural language processing and exploring how it works with a language that's not as mainstream in tech.
+A transformer-based NLP pipeline for Kurdish, built with spaCy and XLM-RoBERTa.
+This project covers both Sorani (Central Kurdish) and Kurmanji (Northern Kurdish) dialects.
 
-## Project Scope
+---
 
-The scope here is pretty straightforward – I'm focusing on the core NLP tasks to get a feel for how spaCy handles language processing. We're talking tokenization, POS tagging, morphological analysis, dependency parsing, and lemmatization. This isn't meant to be a super polished, production-ready model, but more of a hands-on way to understand NLP concepts and apply them to Kurmanji Kurdish. It's all about the journey of learning, experimenting, and seeing what works (and what doesn't)!
+## Results
 
-## Features
+### NER — Named Entity Recognition (Sorani Kurdish)
 
-- Tokenization
-- POS Tagging
-- Morphological Analysis
-- Dependency Parsing
-- Lemmatization
+| Metric | Score |
+|--------|-------|
+| F1 | **88.17** |
+| Precision | 90.33 |
+| Recall | 86.10 |
+
+
+**Per-label scores:**
+
+| Label | F1 |
+|-------|----|
+| DAY | 95.61 |
+| COUNTRY | 94.83 |
+| CURRENCY | 93.99 |
+| LOC | 91.27 |
+| SPORT | 90.26 |
+| PER | 89.35 |
+| MISC | 86.32 |
+| ORG | 77.86 |
+| POSITION | 62.76 |
+
+---
+
+### POS — POS Tagging + Morphology + Dependency Parsing (Kurmanji Kurdish)
+
+| Metric | Score |
+|--------|-------|
+| POS Accuracy | **93.55%** |
+| Morphology | **69.76%** |
+| Dependency LAS | **69.01%** |
+| Sentence Detection F1 | **93.88%** |
+
+**Per-feature morphology scores:**
+
+| Feature | F1 |
+|---------|----|
+| VerbForm | 97.28 |
+| Reflex | 97.96 |
+| AdpType | 95.95 |
+| Definite | 88.51 |
+| Number | 87.94 |
+| Person | 90.68 |
+| Case | 79.25 |
+
+---
+
+## Models
+
+| Model | Dialect | Task | Download |
+|-------|---------|------|----------|
+| kurdish-ner-v1 | Sorani | NER (16 labels) | Coming soon |
+| kurdish-pos-v1 | Kurmanji | POS + Morphology + Dependencies | Coming soon |
+
+---
 
 ## Setup
 
 ```bash
+git clone https://github.com/NuMaCheamaTudor/Kurdish-NLP.git
+cd Kurdish-NLP
 pip install -r requirements.txt
 ```
 
-## Train
+---
 
-```bash
-python scripts/train.py
+## Usage
+
+### NER
+
+```python
+import spacy
+
+nlp = spacy.load("kurdish-ner-v1")
+doc = nlp("ئاژانسی ناسا پلانی هەیە")
+
+for ent in doc.ents:
+    print(ent.text, ent.label_)
 ```
 
-## Evaluate
+### POS + Morphology + Dependency Parsing
 
-```bash
-python scripts/evaluate.py
+```python
+import spacy
+
+nlp = spacy.load("kurdish-pos-v1")
+doc = nlp("Ev kitêb baş e")
+
+for token in doc:
+    print(token.text, token.pos_, token.lemma_, token.dep_)
 ```
 
-## Workflow (spaCy project)
+---
 
-```bash
-# Convert UD CoNLL-U data to .spacy format
-python scripts/convert_ud.py
+## Project Structure
 
-# Or use spaCy project commands
-python -m spacy project run convert
-python -m spacy project run train
+```
+Kurdish-NLP/
+├── notebooks/
+│   ├── kurdish_ner.ipynb           # NER training notebook
+│   ├── kurdish_pos.ipynb           # POS training notebook
+│   └── kurdish_lemmatizer.ipynb    # Lemmatizer notebook
+├── configs/
+│   ├── trf_ner.cfg                 # NER config
+│   └── trf.cfg                     # POS config
+├── scripts/
+│   ├── convert_ner.py              # BIO to spaCy conversion
+│   ├── convert_ud.py               # CoNLL-U to spaCy conversion
+│   ├── train.py                    # Training script
+│   └── evaluate.py                 # Evaluation script
+├── data/
+│   ├── raw/                        # Source datasets (not tracked)
+│   └── processed/                  # Converted .spacy files (not tracked)
+├── kmr_pipeline/                   # Pipeline package
+├── requirements.txt
+└── README.md
 ```
 
-## Data
+---
 
-Place your `.conllu` files in `data/raw/`:
-- `data/raw/train.conllu`
-- `data/raw/dev.conllu`
+## Data Sources
 
-Processed `.spacy` files will be saved to `data/processed/`.
+| Dataset | Dialect | Used for |
+|---------|---------|----------|
+| Custom annotated corpus | Sorani | NER training (22,800 sentences) |
+| UD Northern Kurdish-Kurmanji | Kurmanji | POS/Morphology/Dependency (734 sentences) |
 
-## Output
+---
 
-Trained models are saved to `output/model-best` and `output/model-last`.
+
+## Tech Stack
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| spaCy | 3.8.x | NLP framework |
+| spacy-transformers | 1.4.0 | Transformer integration |
+| XLM-RoBERTa base | — | Multilingual encoder |
+| transformers | 4.46.3 | HuggingFace model loading |
+| PyTorch | — | Training backend |
+
+---
+
+## Citation
+
+If you use this work please cite:
+
+```bibtex
+@misc{kurdish-nlp-2026,
+  author    = {Tudor},
+  title     = {Kurdish NLP Pipeline — Transformer-based NER and POS for Kurdish},
+  year      = {2026},
+  publisher = {GitHub},
+  url       = {https://github.com/NuMaCheamaTudor/Kurdish-NLP}
+}
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+The UD Northern Kurdish-Kurmanji dataset is licensed under CC BY-SA 4.0.
