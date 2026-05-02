@@ -1,6 +1,35 @@
-*.zip 
-*.spacy 
-output/ 
-*.bin 
-*.safetensors 
-data/raw/ 
+# Model outputs
+output/
+pos_output/
+*.zip
+
+# spaCy binary data
+*.spacy
+
+# Model weights
+*.bin
+*.safetensors
+*.pt
+*.onnx
+
+# Raw large datasets
+data/raw/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Kaggle
+/kaggle/
+
+# OS
+.DS_Store
+Thumbs.db
