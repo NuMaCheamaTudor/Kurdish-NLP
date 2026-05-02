@@ -1,5 +1,19 @@
 # Kurdish spaCy Model
 
+
+### POS v1 — POS Tagging + Morphology + Dependency Parsing (Kurmanji Kurdish)
+- Model: XLM-RoBERTa base
+- Dataset: 587 sentences (UD Northern Kurdish-Kurmanji treebank)
+- POS Accuracy: 93.55%
+- Morphology Accuracy: 69.76%
+- Dependency LAS: 69.01%
+
+---
+## Data Sources
+
+- NER: Custom annotated Sorani Kurdish corpus
+- POS: [UD Northern Kurdish-Kurmanji](https://github.com/UniversalDependencies/UD_Northern_Kurdish-Kurmanji) (CC BY-SA 4.0)
+
 ## Setup
 
 ```bash
