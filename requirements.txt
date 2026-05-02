@@ -1,0 +1,7 @@
+spacy>=3.7
+conllu
+srsly
+thinc
+transformers
+torch
+spacy-transformers
