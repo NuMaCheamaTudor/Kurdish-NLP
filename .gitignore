@@ -33,3 +33,5 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+kurdish-pos-output*/
