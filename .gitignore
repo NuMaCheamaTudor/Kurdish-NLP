@@ -4,3 +4,10 @@ output/
 *.spacy
 *.log
 data/processed/
+
+*.zip
+data/raw/
+
+kurdish-ner-v1/transformer/model
+kurdish-pos-output (1)/model-best/transformer/model
+kurdish-pos-output (1)/model-last/transformer/model
