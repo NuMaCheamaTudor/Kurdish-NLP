@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "ud-sdh-garrusi-v2-18",
+  "source_name": "Universal Dependencies Southern Kurdish Garrusi v2.18",
+  "source_url": "https://github.com/UniversalDependencies/UD_Southern_Kurdish-Garrusi/tree/r2.18",
+  "source_version": "r2.18",
+  "retrieved_at": "2026-10-08T13:43:52+00:00",
+  "checksum_sha256": "baa26c6ebb66607251646fb647d6c6634f55284ca012ba53349a85693fe06ced",
+  "license": {
+    "identifier": "CC-BY-SA-4.0",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "conditional",
+    "attribution_required": true,
+    "share_alike_required": true,
+    "verification_url": "https://github.com/UniversalDependencies/UD_Southern_Kurdish-Garrusi/blob/r2.18/LICENSE.txt",
+    "notes": ["Attribute the treebank contributors, retain the license notice, and review share-alike duties before redistributing text or derivatives."]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["external_evaluation", "benchmark"],
+  "sidecar_reference": "data/langid/benchmarks/ud/v2.18/ud_kurdish.provenance.jsonl",
+  "notes": [
+    "Official UD v2.18 tag, released 2026-05-15; archive checksum measured locally from the official codeload endpoint.",
+    "Original train/dev/test are source partitions only; every imported sentence is held out from Language ID development and calibration.",
+    "Garrusi is a Latin-orthography Southern Kurdish variety, not representative of all sdh writing practices."
+  ]
+}

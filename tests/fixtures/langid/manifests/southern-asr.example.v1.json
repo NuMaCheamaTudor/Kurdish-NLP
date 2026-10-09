@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "southern-asr",
+  "source_name": "Southern Kurdish ASR example fixture (no data acquired)",
+  "source_url": "https://huggingface.co/datasets/aranemini/southern-kurdish-asr",
+  "source_version": "example-unpinned",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "CC-BY-NC-ND-4.0",
+    "commercial_use": "prohibited",
+    "redistribution": "conditional",
+    "derivatives": "prohibited",
+    "attribution_required": true,
+    "share_alike_required": false,
+    "verification_url": "https://huggingface.co/datasets/aranemini/southern-kurdish-asr",
+    "notes": ["Noncommercial and no-derivatives conditions require separate review."]
+  },
+  "provenance_status": "verified",
+  "allowed_roles": ["training", "external_evaluation"],
+  "sidecar_reference": null,
+  "notes": ["Metadata-only fixture; training is listed to exercise the policy block."]
+}

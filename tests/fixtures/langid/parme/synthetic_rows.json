@@ -1,0 +1,20 @@
+[
+  {"split":"train","en_sentence":"synthetic source one","fa_sentence":"منبع ساختگی یک","translation":"وشەی تاقی یەک","variety":"Pehley","county":"Pahleh","orthography":"Southern Kurdish","translator":"T1"},
+  {"split":"train","en_sentence":"synthetic source two","fa_sentence":"منبع ساختگی دو","translation":"  وشەی   تاقی دوو  ","variety":"Kirmashani","county":"Kermanshah","orthography":"Southern Kurdish","translator":"T2"},
+  {"split":"train","en_sentence":"synthetic source three","fa_sentence":"منبع ساختگی سه","translation":"وشەی تاقی سێ","variety":"Kalhori","county":"","orthography":"Southern Kurdish","translator":"T2"},
+  {"split":"train","en_sentence":"synthetic source four","fa_sentence":"منبع ساختگی چهار","translation":"وشەی تاقی چوار","variety":"Garusi","county":"Garrus","orthography":"Southern Kurdish","translator":"T3"},
+  {"split":"train","en_sentence":"synthetic source five","fa_sentence":"منبع ساختگی پنج","translation":"وشەی تاقی پێنج","variety":"Badrei","county":"Badreh","orthography":"Southern Kurdish","translator":"T3"},
+  {"split":"train","en_sentence":"synthetic source six","fa_sentence":"منبع ساختگی شش","translation":"وشەی تاقی شەش","variety":"Kirmashani","county":"Kermanshah","orthography":"Southern Kurdish","translator":"T1"},
+  {"split":"train","en_sentence":"synthetic source seven","fa_sentence":"منبع ساختگی هفت","translation":"وشەی تاقی حەوت","variety":"Pehley","county":"Pahleh","orthography":"Southern Kurdish","translator":"T1"},
+  {"split":"train","en_sentence":"synthetic source eight","fa_sentence":"منبع ساختگی هشت","translation":"وشەی تاقی هەشت","variety":"Kirmashani","county":"Kermanshah","orthography":"Southern Kurdish","translator":"T2"},
+  {"split":"val","en_sentence":"synthetic source one","fa_sentence":"منبع ساختگی تازه","translation":"وشەی تاقی نۆ","variety":"Pehley","county":"Pahleh","orthography":"Southern Kurdish","translator":"T4"},
+  {"split":"val","en_sentence":"synthetic source nine","fa_sentence":"منبع ساختگی نه","translation":"وشەی تاقی دە","variety":"Kirmashani","county":"Kermanshah","orthography":"Southern Kurdish","translator":"T4"},
+  {"split":"test","en_sentence":"synthetic source ten","fa_sentence":"منبع ساختگی ده","translation":"وشەی تاقی یازدە","variety":"Kalhori","county":"Kalhor","orthography":"Southern Kurdish","translator":"T5"},
+  {"split":"test","en_sentence":"synthetic source eleven","fa_sentence":"منبع ساختگی یازده","translation":"وشەی تاقی دوازدە","variety":"Badrei","county":"Badreh","orthography":"Southern Kurdish","translator":"T5"},
+  {"split":"test","en_sentence":"synthetic source one","fa_sentence":"منبع ساختگی یک","translation":"وشەی تاقی یەک","variety":"Pehley","county":"Pahleh","orthography":"Southern Kurdish","translator":"T1"},
+  {"split":"test","en_sentence":"synthetic source twelve","fa_sentence":"منبع ساختگی دوازده","translation":"وشەی تاقی دە","variety":"Garusi","county":"Garrus","orthography":"Southern Kurdish","translator":"T3"},
+  {"split":"val","en_sentence":"synthetic empty","fa_sentence":"منبع خالی","translation":"   ","variety":"Pehley","county":"Pahleh","orthography":"Southern Kurdish","translator":"T1"},
+  {"split":"val","en_sentence":"synthetic wrong label","fa_sentence":"منبع نامناسب","translation":"وشەی تاقی نەناسراو","variety":"Hawrami","county":"","orthography":"Hawrami","translator":"T6"},
+  {"split":"val","en_sentence":"synthetic wrong variety","fa_sentence":"منبع گونه","translation":"وشەی تاقی سێزدە","variety":"Hawrami","county":"","orthography":"Southern Kurdish","translator":"T6"},
+  {"split":"test","malformed_fields":["broken","row"]}
+]

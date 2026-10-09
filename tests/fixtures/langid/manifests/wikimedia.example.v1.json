@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "wikimedia",
+  "source_name": "Wikimedia example fixture (no data acquired)",
+  "source_url": "https://dumps.wikimedia.org/",
+  "source_version": "example-unpinned",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "CC-BY-SA-4.0",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "conditional",
+    "attribution_required": true,
+    "share_alike_required": true,
+    "verification_url": "https://www.mediawiki.org/wiki/Wikimedia_APIs/Content_reuse",
+    "notes": ["Verify each project's content license and preserve page/revision attribution."]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["training", "development", "test", "external_evaluation"],
+  "sidecar_reference": null,
+  "notes": ["Metadata-only fixture; no revision or dump was acquired."]
+}

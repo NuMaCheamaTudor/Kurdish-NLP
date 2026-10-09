@@ -1,0 +1,28 @@
+# newdoc id = doc-1
+# newpar id = par-1
+# sent_id = sample-1
+# text = Ezê biçim.
+1-2	Ezê	_	_	_	_	_	_	_	_
+1	Ez	ez	PRON	_	_	3	nsubj	_	_
+2	ê	ê	AUX	_	_	3	aux	_	_
+3	biçim	çûn	VERB	_	_	0	root	_	SpaceAfter=No
+4	.	.	PUNCT	_	_	3	punct	_	_
+3.1	ghost	ghost	X	_	_	_	_	_	_
+
+# sent_id = sample-2
+1	ئەم	ئەم	PRON	_	_	0	root	_	_
+2	دەچین	چوون	VERB	_	_	1	dep	_	SpaceAfter=No
+3	.	.	PUNCT	_	_	1	punct	_	_
+
+# sent_id = sample-2
+# text = Ezê biçim.
+1	Ezê	Ezê	X	_	_	0	root	_	SpaceAfter=No
+2	.	.	PUNCT	_	_	1	punct	_	_
+
+# text = Another sentence.
+1	Another	another	X	_	_	0	root	_	_
+2	sentence	sentence	X	_	_	1	dep	_	SpaceAfter=No
+3	.	.	PUNCT	_	_	1	punct	_	_
+
+# sent_id = malformed
+1	bad	bad

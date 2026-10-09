@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "parme",
+  "source_name": "PARME example fixture (no data acquired)",
+  "source_url": "https://github.com/DOLMA-NLP/PARME",
+  "source_version": "example-unpinned",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "MIT",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "allowed",
+    "attribution_required": true,
+    "share_alike_required": false,
+    "verification_url": "https://github.com/DOLMA-NLP/PARME/blob/main/LICENSE",
+    "notes": ["Retain the license notice; verify the exact pinned release before acquisition."]
+  },
+  "provenance_status": "verified",
+  "allowed_roles": ["training", "development", "external_evaluation"],
+  "sidecar_reference": null,
+  "notes": ["Metadata-only test fixture; source version and acquired artifact are not pinned."]
+}

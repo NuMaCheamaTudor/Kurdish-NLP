@@ -1,0 +1,64 @@
+{
+  "config_sha256": "0c948dc2853021d96f0177661f439fe1ba544b1cd7c8d01f1e6fc3f00b8b652b",
+  "counts": {
+    "ar": {
+      "dev": 1999,
+      "test": 1999,
+      "total": 20000,
+      "train": 16002
+    },
+    "ckb": {
+      "dev": 1792,
+      "test": 1792,
+      "total": 17930,
+      "train": 14346
+    },
+    "en": {
+      "dev": 1999,
+      "test": 1999,
+      "total": 20000,
+      "train": 16002
+    },
+    "fa": {
+      "dev": 1999,
+      "test": 1999,
+      "total": 20000,
+      "train": 16002
+    },
+    "kmr": {
+      "dev": 1599,
+      "test": 1599,
+      "total": 15998,
+      "train": 12800
+    },
+    "sdh": {
+      "dev": 1081,
+      "test": 1080,
+      "total": 10826,
+      "train": 8665
+    },
+    "tr": {
+      "dev": 1999,
+      "test": 1999,
+      "total": 20000,
+      "train": 16002
+    }
+  },
+  "dataset": "dataset-v1",
+  "dataset_version": "1.0.0",
+  "lock_schema_version": 1,
+  "outputs": {
+    "ambiguous.jsonl": "8ee4a9031dec9af892a45c48fea27a6caa6ca1f57d8002972f7d581054683ea2",
+    "audit.json": "aeefb6704288e9ee801bd62b7b8d59e504bd4f5918107e6fbfdb4b1e2e501b7f",
+    "audit.txt": "b76f9b669cf5f06ba06b28868827e9acafeea02fc9724df58d018ec3542ce3b9",
+    "dataset.jsonl": "30eac2160e5ef0c8440a79fd22cccf2e6d6b277193b02bdc8ff2e8dfe9843a9f",
+    "dev.jsonl": "51ac21448e0051138bd2fa4cbd110d5022f9c34a81edd47a7efd1abb69a76994",
+    "duplicates.jsonl": "16266188ec4be35a37245aa9ec14e57c33fdc5df3ef4986970e44ca9c45aa22a",
+    "near_duplicates.jsonl": "57aff463caaf0360c51bef89c0520f0082c5395960f41b6e33e472125b685270",
+    "provenance.jsonl": "1c8718c6cf36cb76ef5bf2b94b4f377515268e758fa03771a8e7f6e906229455",
+    "quarantined.jsonl": "9ba75ad0858a34988daf53aedd7a5db47bb074c8c57465756af34c215cfafc49",
+    "review_queue.jsonl": "5813f15860961645ab4699001a2e6415c52bb67982a2e1a5f06628dbb1304452",
+    "test.jsonl": "c4adbd15380692063d21ab46f21a84bdbd92726bcad5c6eae9b5908aa9268ad1",
+    "train.jsonl": "27c0a30ed4edeca176b7c1f9c752fd3e8412980dd6bf0a52a01e8c82f584a6f5"
+  }
+}

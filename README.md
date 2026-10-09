@@ -150,6 +150,25 @@ Kurdish-NLP/
 
 ---
 
+## Language identification foundation
+
+The repository now includes a backend-independent foundation for future detection
+of `ckb`, `kmr`, `sdh`, `ar`, `fa`, `tr`, and `en`, with `und` as a conservative
+runtime abstention result. It provides typed results, safe normalization, canonical
+JSONL validation/conversion tooling, and an optional fastText adapter.
+Offline-audited acquisition/import pipelines are available for PARME, Tatoeba,
+and six Wikimedia editions. A reproducible builder
+(`kurdish-langid-data build dataset-v1`) combines their verified exports into a
+deduplicated, group-aware train/dev/test release with UD v2.18 reserved for
+external evaluation; generated corpora stay git-ignored and only the
+configuration and output-hash lock are tracked.
+
+No production-quality detector or trained Language ID model is included yet. Real,
+balanced datasets, held-out evaluation, and confidence calibration are still
+required. See [the Language ID documentation](docs/language-identification.md).
+
+---
+
 ## Citation
 
 If you use this work please cite:

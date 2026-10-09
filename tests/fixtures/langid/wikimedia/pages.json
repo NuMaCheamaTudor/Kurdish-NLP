@@ -1,0 +1,72 @@
+[
+  {
+    "page_id": "101",
+    "namespace": "0",
+    "title": "وتاری کوردی",
+    "revision_id": "501",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": "TestAuthor",
+    "redirect": false,
+    "wikitext": "{{Infobox|name=not prose}}\n\nئەمە وتارێکی کوردییە کە زانیارییەکی زۆر دەدات. ئەم دەقە بۆ تاقیکردنەوەیە.<ref>citation</ref>\n\n{| class=x\n| table cell contamination\n|}\n\n== سەرچاوەکان ==\n* [[Source]]"
+  },
+  {
+    "page_id": "102",
+    "namespace": "0",
+    "title": "Gotara Kurdî",
+    "revision_id": "502",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": "TestAuthor",
+    "redirect": false,
+    "wikitext": "Ev gotarek li ser dîroka Kurdistanê ye û agahiyên girîng vedibêje.\n\n== References ==\n* [[Book]]"
+  },
+  {
+    "page_id": "103",
+    "namespace": "0",
+    "title": "Mixed script",
+    "revision_id": "503",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": null,
+    "redirect": false,
+    "wikitext": "Ev gotara Kurmancî ye و ئەم بەشە بە کوردیی ناوەندییە."
+  },
+  {
+    "page_id": "104",
+    "namespace": "0",
+    "title": "Redirect",
+    "revision_id": "504",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": null,
+    "redirect": true,
+    "wikitext": "#REDIRECT [[Other page]]"
+  },
+  {
+    "page_id": "105",
+    "namespace": "0",
+    "title": "Disambiguation",
+    "revision_id": "505",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": null,
+    "redirect": false,
+    "wikitext": "{{disambig}}\n\nThis may refer to several people."
+  },
+  {
+    "page_id": "106",
+    "namespace": "0",
+    "title": "Empty",
+    "revision_id": "506",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": null,
+    "redirect": false,
+    "wikitext": ""
+  },
+  {
+    "page_id": "107",
+    "namespace": "0",
+    "title": "Duplicate",
+    "revision_id": "507",
+    "revision_timestamp": "2026-10-01T00:00:00Z",
+    "contributor": null,
+    "redirect": false,
+    "wikitext": "Ev gotarek li ser dîroka Kurdistanê ye û agahiyên girîng vedibêje."
+  }
+]

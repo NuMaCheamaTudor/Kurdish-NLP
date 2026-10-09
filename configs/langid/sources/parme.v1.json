@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "parme",
+  "source_name": "PARME Southern Kurdish parallel corpus",
+  "source_url": "https://github.com/DOLMA-NLP/PARME/tree/6df9269acc75377ed6be3bf2f7966c8e238a62bd",
+  "source_version": "6df9269acc75377ed6be3bf2f7966c8e238a62bd",
+  "retrieved_at": "2026-10-07T14:18:30Z",
+  "checksum_sha256": "747ff3f5d23f320a193caebbae0ff01104f20d23ab5891e3810b807a0e19c83d",
+  "license": {
+    "identifier": "MIT",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "allowed",
+    "attribution_required": true,
+    "share_alike_required": false,
+    "verification_url": "https://github.com/DOLMA-NLP/PARME/blob/6df9269acc75377ed6be3bf2f7966c8e238a62bd/LICENSE",
+    "notes": [
+      "Keep the pinned PARME MIT license notice with redistributed material."
+    ]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["training", "development", "calibration", "test", "external_evaluation"],
+  "sidecar_reference": "data/langid/processed/parme.provenance.jsonl",
+  "notes": [
+    "Checksum is SHA-256 of the pinned codeload.github.com tar.gz archive, streamed and measured on 2026-10-07; acquisition verifies it again before import.",
+    "Importer reads datasets/SDH-train.tsv, SDH-val.tsv and SDH-test.tsv at this commit; those files have seven named columns and a trailing empty TSV cell.",
+    "Only Southern Kurdish translations are exported; English and Persian source text are used only for alignment grouping and are not stored in canonical or provenance outputs.",
+    "PARME is translation-domain material. The upstream main corpus has 9797 rows; the three split files contain 9806 rows before duplicate and quality checks."
+  ]
+}

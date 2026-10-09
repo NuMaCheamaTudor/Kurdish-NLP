@@ -1,0 +1,7 @@
+{"id":"synthetic-ckb-1","text":"ئەمە دەقێکی تاقیکردنەوەیە","label":"ckb","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-ckb-1","license":"test-only","split":"train"}
+{"id":"synthetic-kmr-1","text":"Ev nivîsa ceribandinê ye","label":"kmr","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-kmr-1","license":"test-only","split":"train"}
+{"id":"synthetic-sdh-1","text":"ئیمە دەقێک تاقی دەکەیمەوە","label":"sdh","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-sdh-1","license":"test-only","split":"train"}
+{"id":"synthetic-ar-1","text":"هذا نص تجريبي","label":"ar","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-ar-1","license":"test-only","split":"dev"}
+{"id":"synthetic-fa-1","text":"این یک متن آزمایشی است","label":"fa","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-fa-1","license":"test-only","split":"dev"}
+{"id":"synthetic-tr-1","text":"Bu bir deneme metnidir","label":"tr","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-tr-1","license":"test-only","split":"test"}
+{"id":"synthetic-en-1","text":"This is synthetic test text","label":"en","source":"synthetic-test-fixture","domain":"synthetic","document_id":"synthetic-doc-en-1","license":"test-only","split":"test"}

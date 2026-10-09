@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "ud-kmr-kurmanji-v2-18",
+  "source_name": "Universal Dependencies Northern Kurdish Kurmanji v2.18",
+  "source_url": "https://github.com/UniversalDependencies/UD_Northern_Kurdish-Kurmanji/tree/r2.18",
+  "source_version": "r2.18",
+  "retrieved_at": "2026-10-08T13:43:51+00:00",
+  "checksum_sha256": "68593a04cde66d285602f08d33c2afe2cd3c2c6d9986e3f12beae3f2b6f851c6",
+  "license": {
+    "identifier": "CC-BY-SA-4.0",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "conditional",
+    "attribution_required": true,
+    "share_alike_required": true,
+    "verification_url": "https://github.com/UniversalDependencies/UD_Northern_Kurdish-Kurmanji/blob/r2.18/LICENSE.txt",
+    "notes": ["Attribute the treebank contributors and cite Gökırmak & Tyers (2017); retain the license notice and review share-alike duties before redistribution."]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["external_evaluation", "benchmark"],
+  "sidecar_reference": "data/langid/benchmarks/ud/v2.18/ud_kurdish.provenance.jsonl",
+  "notes": [
+    "Official UD v2.18 tag, released 2026-05-15; archive checksum measured locally from the official codeload endpoint.",
+    "Source includes fiction and Wikipedia-derived text; the historical POS treebank files already exist in this repository.",
+    "Original train/test are source partitions only; every imported sentence is held out from Language ID development and calibration."
+  ]
+}

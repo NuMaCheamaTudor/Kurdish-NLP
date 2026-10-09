@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "tatoeba",
+  "source_name": "Tatoeba example fixture (no data acquired)",
+  "source_url": "https://tatoeba.org/en/downloads",
+  "source_version": "example-unpinned",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "CC-BY-2.0-FR",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "allowed",
+    "attribution_required": true,
+    "share_alike_required": false,
+    "verification_url": "https://tatoeba.org/en/downloads",
+    "notes": ["This fixture represents CC BY sentence rows; future importers must inspect each row's actual license."]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["training", "development", "test", "external_evaluation"],
+  "sidecar_reference": null,
+  "notes": ["Metadata-only fixture; some upstream sentences can have a different license."]
+}

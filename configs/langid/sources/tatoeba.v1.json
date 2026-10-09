@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "tatoeba",
+  "source_name": "Tatoeba sentence and translation exports",
+  "source_url": "https://downloads.tatoeba.org/exports/",
+  "source_version": "rolling-weekly-export",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "CC-BY-2.0-FR",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "allowed",
+    "attribution_required": true,
+    "share_alike_required": false,
+    "verification_url": "https://tatoeba.org/en/downloads",
+    "notes": [
+      "Official download page declares exports CC BY 2.0 FR and a subset CC0 1.0; the importer resolves each sentence using CC0 export membership.",
+      "This source-level declaration is not a substitute for sentence-level license resolution."
+    ]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": ["training", "development", "calibration", "test", "external_evaluation"],
+  "sidecar_reference": "data/langid/processed/tatoeba.provenance.jsonl",
+  "notes": [
+    "Official exports are rolling rather than immutable; explicit acquisition pins the exact sentences_detailed.tar.bz2, sentences_CC0.tar.bz2 and links.tar.bz2 SHA-256 values in an ignored snapshot receipt.",
+    "The official directory listing observed on 2026-10-08 showed these three exports dated 2026-10-03; this observation is not an immutable release identifier or an acquired snapshot.",
+    "The three exports may be regenerated while acquisition is in progress; retain the acquired archives and receipt for reproducibility.",
+    "Detailed sentences contain ID, language, text, username, created and modified dates, but no direct text-license column.",
+    "Tatoeba is contributed example-sentence and translation data, not natural dialogue."
+  ]
+}

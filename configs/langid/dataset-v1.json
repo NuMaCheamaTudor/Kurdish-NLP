@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "dataset_name": "dataset-v1",
+  "dataset_version": "1.0.0",
+  "release_date": "2026-10-08",
+  "description": "First research-grade seven-class language-identification dataset (ckb, kmr, sdh, ar, fa, tr, en) built from verified PARME, Tatoeba and Wikimedia exports, with UD v2.18 reserved as an external benchmark.",
+  "seed": 42,
+  "labels": ["ckb", "kmr", "sdh", "ar", "fa", "tr", "en"],
+  "licensing": {
+    "profile": "commercial",
+    "required_roles": ["training", "development", "test"]
+  },
+  "sources": [
+    {
+      "family": "parme",
+      "manifests": ["configs/langid/sources/parme.v1.json"],
+      "canonical": {
+        "path": "data/langid/processed/parme.sdh.jsonl",
+        "sha256": "9d4d91c2df90fe8bf04c895ba2c9786c52b69921439fd73a91fac67614528644"
+      },
+      "provenance": {
+        "path": "data/langid/processed/parme.provenance.jsonl",
+        "sha256": "9bf00ad5b3ef6a764ac43be1158a6c3b94a792c93148b9081907be7dd6e71f41"
+      },
+      "importer_audit": {
+        "path": "data/langid/processed/parme.audit.json",
+        "sha256": "0b6d6e84447f713a32d50121c990f651d6a5f3b3041ce0c39bc4e9b5c66c0e9b"
+      },
+      "acquisition": {"raw_dir": "data/langid/raw/parme"},
+      "contributor_field": "translator_id"
+    },
+    {
+      "family": "tatoeba",
+      "manifests": ["configs/langid/sources/tatoeba.v1.json"],
+      "canonical": {
+        "path": "data/langid/processed/tatoeba.jsonl",
+        "sha256": "48a95bf155860a521ae2f9f30f41499ac7dfcb14b9d6005e4485704f6d510db2"
+      },
+      "provenance": {
+        "path": "data/langid/processed/tatoeba.provenance.jsonl",
+        "sha256": "7f2635b2b0c505246e4bf64c34f39ed457dc34dfba004c2703b02ff0cc9dc1f7"
+      },
+      "importer_audit": {
+        "path": "data/langid/processed/tatoeba.audit.json",
+        "sha256": "8c4d727c93c1fe7e9776513f87ea9224e939b2c7df2871583b49a591983e0751"
+      },
+      "acquisition": {"raw_dir": "data/langid/raw/tatoeba"},
+      "contributor_field": "contributor_id"
+    },
+    {
+      "family": "wikimedia",
+      "manifests": [
+        "configs/langid/sources/wikimedia-ckb.v1.json",
+        "configs/langid/sources/wikimedia-kmr.v1.json",
+        "configs/langid/sources/wikimedia-ar.v1.json",
+        "configs/langid/sources/wikimedia-fa.v1.json",
+        "configs/langid/sources/wikimedia-tr.v1.json",
+        "configs/langid/sources/wikimedia-en.v1.json"
+      ],
+      "canonical": {
+        "path": "data/langid/processed/wikimedia.jsonl",
+        "sha256": "c23e736503786a740889a78e1108a55288f2535b1dc455b70c813a87405dc99e"
+      },
+      "provenance": {
+        "path": "data/langid/processed/wikimedia.provenance.jsonl",
+        "sha256": "18d889b345a965c33d7c508298d52d380e89d70bb910fd1dad0c20722c1d8469"
+      },
+      "importer_audit": {
+        "path": "data/langid/processed/wikimedia.audit.json",
+        "sha256": "6b8a2dbcf2266235738995969b0f5e26f45ab9b63aae38da901471d35e56322f"
+      },
+      "acquisition": {"raw_dir": "data/langid/raw/wikimedia"},
+      "contributor_field": null
+    }
+  ],
+  "benchmark_protection": {
+    "denied_source_ids": ["ud-sdh-garrusi-v2-18", "ud-kmr-kurmanji-v2-18"],
+    "denied_path_prefixes": ["data/langid/benchmarks", "data/langid/raw/ud"],
+    "denied_record_id_prefixes": ["ud:"],
+    "benchmarks": [
+      {
+        "benchmark_id": "ud-kurdish-v2.18",
+        "manifests": [
+          "configs/langid/sources/ud-sdh-garrusi-v2.18.v1.json",
+          "configs/langid/sources/ud-kmr-kurmanji-v2.18.v1.json"
+        ],
+        "records": {
+          "path": "data/langid/benchmarks/ud/v2.18/ud_kurdish.jsonl",
+          "sha256": "1e9af827b6a4ac6b0bd9bf285d924118b5789bb8075589ef543f4655edbac341"
+        },
+        "provenance": {
+          "path": "data/langid/benchmarks/ud/v2.18/ud_kurdish.provenance.jsonl",
+          "sha256": "71459755ac1117b8d9f36ebd4669d57fe19c9ad333ddb320babd34c633c692f5"
+        },
+        "benchmark_manifest": {
+          "path": "data/langid/benchmarks/ud/v2.18/ud_kurdish.manifest.json",
+          "sha256": "b0f9f60b20e68ff4de34f859a07e04f2bd1a7653727788523d8c9d5d7421f989"
+        }
+      }
+    ],
+    "matching": {
+      "exact": true,
+      "loose": true,
+      "sentence_containment": true,
+      "shingle_size": 5,
+      "jaccard_threshold": 0.6,
+      "containment_threshold": 0.8,
+      "min_containment_shingles": 20,
+      "min_sentence_tokens": 3
+    },
+    "action": "quarantine"
+  },
+  "text_policy": {
+    "min_letters": 3,
+    "max_characters": 2000,
+    "require_normalized_input": true
+  },
+  "variety_policy": {
+    "sdh": {
+      "admitted_varieties": ["Badrei", "Garusi", "Kalhori", "Kirmashani", "Pehley"],
+      "not_admitted_note": "Only the five Southern Kurdish varieties reviewed for PARME are admitted as sdh. Laki, Hawrami/Gorani (hac) or any other variety label is quarantined for adjudication rather than merged into sdh. Records without variety metadata keep their source sdh label."
+    }
+  },
+  "deduplication": {
+    "exact_key": "normalize_text_v1",
+    "loose_key": "nfkc_casefold_alnum_v1",
+    "same_label_policy": "retain_one_canonical",
+    "cross_label_policy": "exclude_to_ambiguity_pool",
+    "canonical_source_priority": ["parme", "wikimedia", "tatoeba"],
+    "canonical_license_priority": ["CC0-1.0", "MIT", "CC-BY-2.0-FR", "CC-BY-2.0", "CC-BY-4.0", "CC-BY-SA-4.0"],
+    "sentence_containment": true,
+    "sentence_containment_min_tokens": 3
+  },
+  "near_duplicates": {
+    "method": "char_ngram_jaccard_prefix_filter_v1",
+    "shingle_size": 5,
+    "jaccard_threshold": 0.8,
+    "scope": "selected_records",
+    "same_label_action": "group",
+    "cross_label_action": "group_and_flag"
+  },
+  "grouping": {
+    "giant_group_min_records": 1000,
+    "giant_group_policy": "train_only_rate_matched_subsample"
+  },
+  "sampling": {
+    "unit": "group_label_source_slice",
+    "per_label_cap": {
+      "ckb": null,
+      "kmr": null,
+      "sdh": null,
+      "ar": 20000,
+      "fa": 20000,
+      "tr": 20000,
+      "en": 20000
+    },
+    "source_allocation": "max_min_fair",
+    "max_contributor_share": 0.25,
+    "contributor_cap_mode": "soft_two_pass"
+  },
+  "splits": {
+    "ratios": {"train": 0.8, "dev": 0.1, "test": 0.1},
+    "strategy": "greedy_group_stratified_v1",
+    "strata": ["label", "source_id", "variety"],
+    "roles": {
+      "train": "training only",
+      "dev": "model selection, hyperparameter tuning and confidence calibration",
+      "test": "final internal evaluation only; never for tuning or calibration"
+    }
+  },
+  "review": {
+    "sidecars": [],
+    "default_status": "unreviewed"
+  },
+  "outputs": {
+    "directory": "data/langid/builds/dataset-v1",
+    "work_directory": "data/langid/cache/dataset-v1",
+    "lock_file": "configs/langid/dataset-v1.lock.json"
+  }
+}

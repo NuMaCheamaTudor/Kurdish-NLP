@@ -1,4 +1,5 @@
 .venv/
+.DS_Store
 __pycache__/
 output/
 *.spacy
@@ -7,7 +8,146 @@ data/processed/
 
 *.zip
 data/raw/
+data/langid/raw/*
+!data/langid/raw/.gitkeep
+data/langid/interim/
+data/langid/processed/*
+!data/langid/processed/.gitkeep
+data/langid/cache/
+data/langid/benchmarks/
+artifacts/langid/
 
 kurdish-ner-v1/transformer/model
 kurdish-pos-output (1)/model-best/transformer/model
 kurdish-pos-output (1)/model-last/transformer/model
+
+# Versioned dataset builds are generated artifacts; only configs and locks are tracked.
+data/langid/builds/
+
+# ==========================================
+# KURDISH-NLP — GITIGNORE
+# ==========================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+!.env.test.example
+*.pem
+*.key
+
+# macOS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.ipynb_checkpoints/
+
+# ==========================================
+# LANGUAGE ID — DATASETS
+# ==========================================
+
+# Acquired source datasets
+/data/langid/raw/
+/data/langid/interim/
+
+# Processed PARME, Tatoeba, Wikimedia
+/data/langid/processed/
+
+# Final dataset-v1 and future builds
+/data/langid/builds/
+
+# Universal Dependencies external benchmark
+/data/langid/benchmarks/
+
+# Local caches, temporary work and logs
+/data/langid/cache/
+/data/langid/tmp/
+/data/langid/temp/
+
+# Locally generated acquisition metadata
+/data/langid/manifests/
+
+# ==========================================
+# ML MODEL ARTIFACTS
+# ==========================================
+
+# Generated Language ID models
+/models/langid/
+/artifacts/langid/
+/data/langid/models/
+/data/langid/checkpoints/
+
+# Model weights and checkpoints
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.onnx
+
+# Training outputs
+/runs/
+/wandb/
+/mlruns/
+/tensorboard/
+/lightning_logs/
+
+# ==========================================
+# CLAUDE CODE / CODEX
+# ==========================================
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Temporary agent files
+.claude/worktrees/
+.claude/cache/
+.claude/sessions/
+
+# ==========================================
+# FRONTEND — REACT / VITE
+# ==========================================
+
+node_modules/
+**/node_modules/
+**/dist/
+**/.vite/
+**/.next/
+coverage/
+*.tsbuildinfo
+
+# ==========================================
+# TEMPORARY FILES
+# ==========================================
+
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.pid
+.cache/
+tmp/

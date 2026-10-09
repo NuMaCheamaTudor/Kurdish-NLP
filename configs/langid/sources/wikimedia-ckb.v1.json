@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "manifest_version": "1",
+  "source_id": "wikimedia-ckb",
+  "source_name": "Wikimedia ckbwiki encyclopedia text",
+  "source_url": "https://dumps.wikimedia.org/ckbwiki/20260801/",
+  "source_version": "20260801",
+  "retrieved_at": null,
+  "checksum_sha256": null,
+  "license": {
+    "identifier": "CC-BY-SA-4.0",
+    "commercial_use": "allowed",
+    "redistribution": "conditional",
+    "derivatives": "conditional",
+    "attribution_required": true,
+    "share_alike_required": true,
+    "verification_url": "https://ckb.wikipedia.org/w/api.php?action=query&meta=siteinfo&siprop=rightsinfo&format=json",
+    "notes": [
+      "Preserve article and revision attribution, license notice and share-alike obligations.",
+      "Embedded third-party material may have additional restrictions; conservative extraction cannot establish rights in every excerpt."
+    ]
+  },
+  "provenance_status": "verified_with_caveats",
+  "allowed_roles": [
+    "training",
+    "development",
+    "calibration",
+    "test",
+    "external_evaluation"
+  ],
+  "sidecar_reference": "data/langid/processed/wikimedia.provenance.jsonl",
+  "notes": [
+    "Dated pages-articles-multistream dump; official dumpstatus.json must report done and its MD5/SHA1 must match before local SHA-256 is recorded.",
+    "Article content may contain quotations, translations, boilerplate and third-party excerpts; segment-level review is required."
+  ]
+}
