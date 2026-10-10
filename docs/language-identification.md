@@ -84,7 +84,14 @@ print(result.to_dict())
 ```
 
 Install fastText support separately with `pip install -e '.[fasttext]'`. No model
-binary is included, and this phase does not train, evaluate, or calibrate one.
+binary is committed; trained experiment models live under the git-ignored
+`artifacts/langid/` (see "Experiment 01" below) and load with
+`create_detector(backend="experiment", model_path="artifacts/langid/experiments/baseline-v1/fasttext")`.
+
+With NumPy 2, fastText's single-string `predict` raises (`np.array(..., copy=False)`)
+and every fastText score carries a `+1e-5` offset that can push it above 1.0. The
+adapter therefore routes real models through fastText's list API and removes the
+offset; detectors built with an injected `model_loader` are unaffected.
 
 ## Future workflow and limitations
 
@@ -629,3 +636,61 @@ and one contributor 50% of Tatoeba `kmr`; `sdh` is 90% translated prompts and
 entirely Arabic script; encyclopedic text is 29% of `ckb` and 35% of `kmr` but
 3-6% of the capped classes. These confounds must be considered when
 interpreting per-class results.
+
+## Experiment 01: fastText vs character TF-IDF + logistic regression
+
+`kurdish_nlp.langid.experiments` trains, selects, calibrates and evaluates the
+first two supervised baselines on the frozen Dataset V1. Every value it uses
+(labels, seed, grids, calibration and abstention policy, slices, resource
+limits, artifact paths) is read from `configs/langid/experiments/baseline-v1.json`.
+Install the pinned extra first:
+
+```bash
+pip install -e '.[experiments]'
+kurdish-langid-experiment all --config configs/langid/experiments/baseline-v1.json
+# or one phase at a time:
+kurdish-langid-experiment preflight|select|evaluate|external|report|reproduce
+```
+
+Protocol, enforced by the runner rather than by convention:
+
+| Role | Records | Used for |
+|---|---:|---|
+| train | 99,819 | fitting model parameters only |
+| dev_tune | 6,237 | hyperparameter selection (macro-F1) |
+| dev_calib | 6,231 | temperature scaling and abstention thresholds |
+| test | 12,467 | scored once, after `selection.lock.json` exists |
+| UD strict / exploratory | 217 / 752 | scored after the lock; never tuned on |
+
+`dev` is split into `dev_tune`/`dev_calib` by `document_id` with the builder's
+greedy group-stratified algorithm (strata: label × source), so the two roles
+share no group. Whether temperature scaling is adopted is decided by two-fold
+group cross-fitting inside `dev_calib`. `select` writes a lock with the model,
+inference-spec and configuration hashes; `evaluate`, `external` and `report`
+refuse to run without it or if any of those files changed, and `select`
+refuses to run once the test set has been scored.
+
+Abstention reuses `ReliabilityPolicy`: `und` is only a runtime outcome, never
+a trained class. Reports compare raw arg-max, the reference policy (0.70
+confidence / 0.20 margin on raw scores) and the policy tuned on `dev_calib`
+(maximum coverage with selective accuracy at least 0.99, on calibrated scores).
+
+fastText is pinned to the official **0.9.2** release for training. In 0.9.3 the
+input matrix is allocated with `posix_memalign` (uninitialized) and
+`DenseMatrix::uniform` initializes only `thread`/10 of it, so with fewer than 11
+threads most embedding rows start as leftover heap bytes: identical seeded runs
+produced different models or NaN. 0.9.2 uses a zero-initialized `std::vector`;
+with `thread=1` it initializes the first tenth of the rows uniformly and the rest
+to zero, deterministically. Training refuses 0.9.3 with fewer than 11 threads.
+
+Outputs (git-ignored) go to `artifacts/langid/experiments/baseline-v1/`:
+`fasttext/model.bin`, `tfidf_lr/model.joblib` (with a hash/version sidecar;
+joblib is a trusted-local format only), per-family `training.json`,
+`calibration.json`, `inference.json`, `evaluation.json`,
+`evaluation_external.json`, `runtime.json` and stored predictions; the
+selection lock; `reports/` (comparison, per-class and per-slice CSVs, Kurdish
+confusion analysis, `errors.jsonl`, `ud_external.json`, figures);
+`reproducibility.json`; and `experiment_manifest.json`. Timings are kept in
+`runtime.json` so that metric, prediction and report hashes stay reproducible.
+Contributor identities are reported only as train-ranked tiers (`top`, `head`,
+`tail`, `unseen`) or salted pseudonyms.

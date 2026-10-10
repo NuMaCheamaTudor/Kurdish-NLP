@@ -339,14 +339,48 @@ def convert_jsonl_to_fasttext(
     if not selected:
         raise ValueError("no records match the requested splits")
 
+    return write_fasttext_examples(
+        output_path, ((record.label, record.text) for record in selected)
+    )
+
+
+FASTTEXT_LABEL_PREFIX = "__label__"
+
+
+def format_fasttext_example(label: LanguageCode | str, text: str) -> str:
+    """Return exactly one supervised fastText line for ``text``.
+
+    ``normalize_text`` collapses every Unicode whitespace character (including
+    newlines, U+2028 and U+0085) to one space, so the result is always a single
+    line. A token that starts with the label prefix would be read by fastText as
+    an extra label, so such text is rejected instead of silently relabelled.
+    """
+
+    language = LanguageCode(label)
+    if language not in TRAINABLE_LANGUAGE_CODES:
+        raise ValueError("und is not a trainable label")
+    normalized = normalize_text(text)
+    if not normalized:
+        raise ValueError("cannot write an empty fastText example")
+    if any(token.startswith(FASTTEXT_LABEL_PREFIX) for token in normalized.split(" ")):
+        raise ValueError("text contains a token with the fastText label prefix")
+    return f"{FASTTEXT_LABEL_PREFIX}{language.value} {normalized}\n"
+
+
+def write_fasttext_examples(
+    output_path: str | Path,
+    examples: Iterable[tuple[LanguageCode | str, str]],
+) -> int:
+    """Write ``(label, text)`` pairs as UTF-8 supervised fastText lines."""
+
     destination = Path(output_path)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    count = 0
     with destination.open("w", encoding="utf-8", newline="\n") as output:
-        for record in selected:
-            output.write(
-                f"__label__{record.label.value} {normalize_text(record.text)}\n"
-            )
-    return len(selected)
+        for label, text in examples:
+            output.write(format_fasttext_example(label, text))
+            count += 1
+    return count
 
 
 def _length_summary(values: Sequence[int]) -> dict[str, float]:

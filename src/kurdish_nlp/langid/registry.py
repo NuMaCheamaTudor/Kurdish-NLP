@@ -21,4 +21,8 @@ def create_detector(
         from kurdish_nlp.langid.fasttext_detector import FastTextLanguageDetector
 
         return FastTextLanguageDetector(model_path=model_path, **options)
+    if normalized_backend == "experiment":
+        from kurdish_nlp.langid.experiments.detector import load_experiment_detector
+
+        return load_experiment_detector(model_path, **options)
     raise ValueError(f"unsupported language detector backend: {backend!r}")

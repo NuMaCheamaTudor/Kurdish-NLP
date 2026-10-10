@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Protocol, cast
+from typing import Protocol
 
 from kurdish_nlp.langid.base import LanguageDetector
 from kurdish_nlp.langid.normalization import normalize_text
@@ -31,6 +31,32 @@ class FastTextModel(Protocol):
 
 
 ModelLoader = Callable[[Path], FastTextModel]
+
+# fastText reports each probability as exp(log(p + 1e-5)) (its std_log adds
+# 1e-5), so raw scores exceed the softmax value by 1e-5 and can exceed 1.0.
+FASTTEXT_PROBABILITY_OFFSET = 1e-5
+
+
+def fasttext_probability(raw_score: float) -> float:
+    """Undo fastText's log offset and clip the score into [0, 1]."""
+
+    return min(1.0, max(0.0, float(raw_score) - FASTTEXT_PROBABILITY_OFFSET))
+
+
+class NumpyCompatibleFastTextModel:
+    """Route single-text prediction through fastText's list API.
+
+    fastText 0.9.3's single-string ``predict`` calls ``np.array(..., copy=False)``,
+    which NumPy 2 rejects; the list path returns arrays directly. Scores are
+    returned without fastText's 1e-5 offset so they are valid confidences.
+    """
+
+    def __init__(self, model: object) -> None:
+        self._model = model
+
+    def predict(self, text: str, k: int = 1) -> tuple[Sequence[str], Sequence[float]]:
+        labels, scores = self._model.predict([text], k=k)  # type: ignore[attr-defined]
+        return tuple(labels[0]), tuple(fasttext_probability(s) for s in scores[0])
 
 
 class FastTextLanguageDetector(LanguageDetector):
@@ -71,7 +97,7 @@ class FastTextLanguageDetector(LanguageDetector):
                 "fastText support is optional; install the project with "
                 "the 'fasttext' extra to load a fastText model"
             ) from error
-        return cast(FastTextModel, fasttext.load_model(str(path)))
+        return NumpyCompatibleFastTextModel(fasttext.load_model(str(path)))
 
     def detect(self, text: str, top_k: int = 3) -> DetectionResult:
         if not isinstance(top_k, int) or isinstance(top_k, bool) or top_k < 1:

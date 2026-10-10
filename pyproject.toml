@@ -12,11 +12,23 @@ dependencies = []
 
 [project.optional-dependencies]
 fasttext = ["fasttext>=0.9.2,<0.10"]
+# fastText is pinned to 0.9.2: 0.9.3 trains on uninitialized memory when
+# thread < 11 (see kurdish_nlp.langid.experiments.fasttext_baseline).
+experiments = [
+    "fasttext==0.9.2",
+    "numpy>=2,<3",
+    "scipy>=1.13",
+    "scikit-learn>=1.9,<1.10",
+    "joblib>=1.4",
+    "threadpoolctl>=3",
+    "matplotlib>=3.9",
+]
 wikimedia = ["mwparserfromhell>=0.7,<1"]
 dev = ["pytest>=8,<10", "mwparserfromhell>=0.7,<1"]
 
 [project.scripts]
 kurdish-langid-data = "kurdish_nlp.langid.cli:main"
+kurdish-langid-experiment = "kurdish_nlp.langid.experiments.runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -25,3 +37,6 @@ where = ["src"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
+markers = [
+    "experiment: trains tiny real fastText/scikit-learn models on synthetic data",
+]
