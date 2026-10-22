@@ -9,6 +9,13 @@ This project covers both Sorani (Central Kurdish) and Kurmanji (Northern Kurdish
 
 ### NER — Named Entity Recognition (Sorani Kurdish)
 
+These historical NER scores are **not a trustworthy baseline**: the saved V1
+configuration uses `ner.spacy` for both training and development. They are kept
+here only as a historical record and must not be compared with V2 results.
+The [Sorani NER V2 foundation](docs/sorani-ner-v2.md) provides an independently
+audited corpus, frozen leakage-aware splits, and a validated real XLM-R smoke
+test. A full V2 model and held-out test results are not available yet.
+
 | Metric | Score |
 |--------|-------|
 | F1 | **88.17** |
@@ -132,7 +139,7 @@ Kurdish-NLP/
 
 | Dataset | Dialect | Used for |
 |---------|---------|----------|
-| Custom annotated corpus | Sorani | NER training (22,800 sentences) |
+| Custom annotated corpus | Sorani | NER source: 22,800 BIO segments; original document identities unknown |
 | UD Northern Kurdish-Kurmanji | Kurmanji | POS/Morphology/Dependency (734 sentences) |
 
 ---
@@ -169,6 +176,60 @@ required. See [the Language ID documentation](docs/language-identification.md).
 
 ---
 
+## Kurdish NLP Studio (local web app)
+
+A local workspace for language identification: a FastAPI service (`apps/api`)
+in front of the trained baseline-v1 classifiers, and a React app (`apps/web`).
+Named entities and grammar appear as unavailable until a complete spaCy
+pipeline is installed; nothing is simulated.
+
+### Model files
+
+The trained models are git-ignored and **not publicly hosted yet**, so a fresh
+clone does not include them. The API expects the frozen experiment directory:
+
+```
+artifacts/langid/experiments/baseline-v1/
+  selection.lock.json, experiment_manifest.json
+  tfidf_lr/  inference.json, model.joblib, model.joblib.meta.json, evaluation*.json
+  fasttext/  inference.json, model.bin, evaluation*.json
+```
+
+Copy it from a machine that has it, or point `KNLP_ARTIFACTS_DIR` at another
+copy. Regenerating it means rebuilding Dataset V1 and rerunning Experiment 01
+(see the Language ID documentation). Every artifact is hash-checked against its
+inference spec and the selection lock before loading. The TF-IDF pickle loads
+only under the scikit-learn version that saved it (1.9.1). A missing or
+mismatched model is reported as unavailable; the app keeps running.
+
+### Run
+
+```bash
+# Backend (Python 3.11+), from the repository root
+python -m venv .venv && source .venv/bin/activate
+pip install -e '.[experiments]'
+pip install -r apps/api/requirements.txt
+uvicorn app.main:app --app-dir apps/api --port 8000
+
+# Frontend (Node 22.12+), in a second terminal
+cd apps/web
+npm install
+npm run dev            # http://localhost:5173, proxies /api to port 8000
+```
+
+Optional settings live in `apps/api/.env.example` and `apps/web/.env.example`
+(artifact path, default model, text limit, CORS origins, API URL).
+
+### Test
+
+```bash
+cd apps/api && pytest                  # API, against the real models when present
+cd apps/web && npm test                # components and flows (Vitest)
+cd apps/web && npx playwright install chromium && npm run e2e   # end to end, starts both servers
+```
+
+---
+
 ## Citation
 
 If you use this work please cite:
@@ -189,3 +250,11 @@ If you use this work please cite:
 
 This project is licensed under the MIT License.
 The UD Northern Kurdish-Kurmanji dataset is licensed under CC BY-SA 4.0.
+
+
+The current [Colab notebook](notebooks/sorani_ner_v2_colab.ipynb) includes the T4
+AMP accumulation/overflow correction and gradient checkpointing. Prepare its
+matching code zip with `scripts/prepare_ner_colab.py` (default output:
+`artifacts/ner/colab-stress-fix/sorani-ner-v2-code.zip`). Use a fresh run ID and
+repeat all GPU preflights. See the [stress failure analysis](docs/sorani-ner-v2-colab-stress-fix.md);
+T4 training capacity still requires Colab verification.

@@ -1,0 +1,89 @@
+{
+    "task": "language",
+    "language": {
+        "code": "und",
+        "name": "Inconclusive",
+        "alt_name": null,
+        "mode": "auto"
+    },
+    "detection": {
+        "language": {
+            "code": "und",
+            "name": "Inconclusive",
+            "alt_name": null
+        },
+        "is_reliable": false,
+        "abstained": true,
+        "reason": "low_confidence",
+        "reason_message": "The top score is below the policy's confidence threshold.",
+        "confidence": 0.3321464192719137,
+        "margin": 0.015935241374650022,
+        "scores": [
+            {
+                "code": "en",
+                "name": "English",
+                "score": 0.3321464192719137
+            },
+            {
+                "code": "kmr",
+                "name": "Kurmanji",
+                "score": 0.31621117789726366
+            },
+            {
+                "code": "tr",
+                "name": "Turkish",
+                "score": 0.29797710469852795
+            },
+            {
+                "code": "ar",
+                "name": "Arabic",
+                "score": 0.020077207047334705
+            },
+            {
+                "code": "ckb",
+                "name": "Sorani",
+                "score": 0.014210970357626305
+            },
+            {
+                "code": "fa",
+                "name": "Persian",
+                "score": 0.012460866316327097
+            },
+            {
+                "code": "sdh",
+                "name": "Southern Kurdish",
+                "score": 0.00691625441100659
+            }
+        ],
+        "model": {
+            "id": "tfidf_lr",
+            "name": "TF-IDF + LR",
+            "identifier": "kurdish-langid-baseline-v1-tfidf_lr",
+            "version": "1.0.0"
+        },
+        "policy": {
+            "name": "reference",
+            "calibrated": false,
+            "confidence_threshold": 0.7,
+            "margin_threshold": 0.2,
+            "minimum_letter_count": 3
+        },
+        "score_semantics": "raw model scores; not calibrated and not guaranteed probabilities",
+        "warnings": [
+            {
+                "code": "short_text",
+                "severity": "info",
+                "message": "Short input. Most internal-test errors were on texts of five words or fewer."
+            }
+        ],
+        "input": {
+            "characters": 15,
+            "letters": 14,
+            "words": 2,
+            "script": "latin"
+        },
+        "elapsed_ms": 0.668
+    },
+    "entities": null,
+    "grammar": null
+}

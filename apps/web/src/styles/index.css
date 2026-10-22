@@ -1,0 +1,110 @@
+@import "@fontsource-variable/geist/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
+@import "@fontsource-variable/noto-sans-arabic/wght.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Geist Variable", "Noto Sans Arabic Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-canvas: #f7f7f4;
+  --color-surface: #ffffff;
+  --color-ink: #172a2e;
+  --color-ink-2: #46585b;
+  --color-ink-3: #758587;
+  --color-line: #dce9e6;
+  --color-line-strong: #c5d6d2;
+  --color-wash: #f0f4f2;
+  --color-track: #ebf1ef;
+  --color-accent: #387d79;
+  --color-accent-strong: #2b6461;
+  --color-accent-soft: #e6f0ee;
+  --color-compare: #8fa3a6;
+  --color-warn: #8a5a12;
+  --color-warn-soft: #fbf4e6;
+  --color-warn-line: #efdcb5;
+  --color-danger: #a6423a;
+  --color-danger-soft: #fbefed;
+  --color-danger-line: #f0d2cd;
+
+  --shadow-card: 0 1px 2px rgb(23 42 46 / 0.04), 0 0 0 1px rgb(23 42 46 / 0.02);
+  --shadow-pop: 0 8px 24px -6px rgb(23 42 46 / 0.14), 0 2px 6px rgb(23 42 46 / 0.06);
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--color-canvas);
+  }
+
+  ::selection {
+    background: rgb(56 125 121 / 0.2);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* The editor and any surface that renders user text. In auto mode each
+     paragraph takes its direction from its own first strong character. */
+  .user-text {
+    font-size: 17px;
+    line-height: 1.8;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+    font-kerning: normal;
+  }
+  .user-text[dir="auto"] {
+    unicode-bidi: plaintext;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.98);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

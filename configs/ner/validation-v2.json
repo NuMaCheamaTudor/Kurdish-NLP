@@ -1,0 +1,381 @@
+{
+  "adapter_validation": {
+    "api_configuration_changed": false,
+    "input_text_preserved": true,
+    "labels": [
+      "COUNTRY",
+      "CURRENCY",
+      "DAY",
+      "EQUIPMENT",
+      "EVENT",
+      "LOC",
+      "MISC",
+      "MONTH",
+      "ORG",
+      "PER",
+      "POLITICAL_PARTY",
+      "POSITION",
+      "RELIGION",
+      "SEASON",
+      "SPORT"
+    ],
+    "model_path": "artifacts/ner/smoke-v2-final/checkpoints/model-best",
+    "predicted_entities": 1,
+    "ready": true,
+    "result_matches_existing_adapter": true
+  },
+  "benchmark": {
+    "checkpoint_modified": false,
+    "contract_validated": true,
+    "dataset_lock_sha256": "9cdda285aee64f1119554c40559be45e41799f8a1a19d4c4f53eff37868a8651",
+    "estimate_caveat": "Two ordinary-length single-record CPU updates only. Full run batching, long segments, evaluation, checkpoints, memory pressure and early stopping change runtime; not an ETA.",
+    "estimated_15_epoch_compute_hours": 39.13162248207387,
+    "inference": {
+      "batch_size": 1,
+      "device": "cpu",
+      "seconds": 1.3460686250000435,
+      "segments": 32,
+      "segments_per_second": 23.77293356792932,
+      "threads": 4,
+      "tokens": 878,
+      "tokens_per_second": 652.2698647700607
+    },
+    "model_files": {
+      "config.cfg": "9d6b2bf16faa74180d942fe081bb6ac82091875fe5595b24a39c45d987c6f0b4",
+      "meta.json": "cf23ddc2abce873b62198dee03497b8823b28aac2b4cd01185a573b2d5b5c3af",
+      "ner/cfg": "a7172edadafba9f472e9ac0f2660eec04b6405e471be9e20267b79c67288d22d",
+      "ner/model": "003e706882e1cf7e1e611fbefa844a14e0961d44d6dc38c48746faeda58b37d2",
+      "ner/moves": "cb68ad3b84a46947355dfc5f4af6fcf6fdc67afb9c888c049f50ae4a7d1df990",
+      "tokenizer": "0b22cd2a783cd6b384c4f370d068c47df6e13f28b9dd84ed1e4ca886bc960d51",
+      "transformer/cfg": "ed50a46b1bfe9e91213af058c60490a47b72c37a176f852dbc5a2af7f6498f58",
+      "transformer/model": "8f3be9d838ae8ec4719f0d3fc656b636bbcbb3bd8a2d84315c7fddca81fa6c2d",
+      "vocab/key2row": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "vocab/lookups.bin": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "vocab/strings.json": "a8bb2210693ee5cee00274ba9af69c7b0766ba5968e5fabfb6881d9fff705039",
+      "vocab/vectors": "14772b683e726436d5948ad3fff2b43d036ef2ebbe3458aafed6004e05a40706",
+      "vocab/vectors.cfg": "ff4359091952c8cd16f1f0482f5770fb82d1707368d5cca3c46aa501f552e3c5"
+    },
+    "peak_rss_bytes": 6659063808,
+    "test_predicted": false,
+    "training_tokens_per_second": 54.662100137722284,
+    "training_updates": [
+      {
+        "losses": {
+          "ner": 18.43360710144043,
+          "transformer": 12.396261215209961
+        },
+        "record": "seg-000007",
+        "seconds": 0.18388462500115565,
+        "tokens": 29
+      },
+      {
+        "losses": {
+          "ner": 17.978586196899414,
+          "transformer": 45.939544677734375
+        },
+        "record": "seg-000009",
+        "seconds": 0.913768041998992,
+        "tokens": 31
+      }
+    ],
+    "wordpiece_preflight_train_dev": {
+      "capacity": 512,
+      "max_wordpieces": 171,
+      "truncation": false,
+      "windows": 26660
+    }
+  },
+  "code_sha256": {
+    "scripts/ner_download_encoder.py": "deb373e12e8447abecfbb2bd3f3442498b3d17b42828bf41ca0cf287b632b854",
+    "src/kurdish_nlp/ner/__init__.py": "27d3d6514f55ba1684498e059373f62da6fbe7e85b5352fa5019247713a76995",
+    "src/kurdish_nlp/ner/build.py": "5203861e795bdf8d989517f358da20f659824c87fc9cde0ef5b1abba555d9a51",
+    "src/kurdish_nlp/ner/cli.py": "32ee3f303df329cb53f88e358155abdedad9584f51bfdfca44dae07d3bb1a9f9",
+    "src/kurdish_nlp/ner/contract.py": "dc92bf08c7f4db447998a6ef4317115ec7a83e7f1c41846729a469fd1912c7d0",
+    "src/kurdish_nlp/ner/dataset.py": "2e0f231782cca146007836b2e4128d1b869d7ea76eb9371c442ccb56b15670d9",
+    "src/kurdish_nlp/ner/evaluation.py": "101cdac8655465a78ea618362fcd677e4f6c663077066ab0f060af0c62364d84",
+    "src/kurdish_nlp/ner/grouping.py": "d3d5a0fdfa9774409ab2fefafb475d200d749622e5b3d7f08eb97acdf366b2c7",
+    "src/kurdish_nlp/ner/training.py": "c515e90e808bdc2be414d6c3f05b2bf84c1806909efd5085fa093fa7f3f2961a"
+  },
+  "conversion": {
+    "files": {
+      "dev.spacy": "bb653c3210e46caf99a758d4462e106c6eac92d1a68b274d17952306d54e6f85",
+      "test.spacy": "9ec1c7053f27a38445a4a8639da8d26472c1d63062ebc78bbfb2afb0cfe571d4",
+      "train.spacy": "b196c6a71f555a14a7b2589bb60c97c6c1d400b5a11efc2f5339bdd91612ecec"
+    },
+    "lock_sha256": "9cdda285aee64f1119554c40559be45e41799f8a1a19d4c4f53eff37868a8651",
+    "spacy": "3.8.7",
+    "splits": {
+      "dev": {
+        "bio_tokens": 59375,
+        "entities": 6736,
+        "retokenized_segments": 1,
+        "segments": 2058,
+        "spacy_tokens": 59376
+      },
+      "test": {
+        "bio_tokens": 63214,
+        "entities": 7024,
+        "retokenized_segments": 0,
+        "segments": 2145,
+        "spacy_tokens": 63214
+      },
+      "train": {
+        "bio_tokens": 513364,
+        "entities": 56727,
+        "retokenized_segments": 2,
+        "segments": 17396,
+        "spacy_tokens": 513366
+      }
+    }
+  },
+  "dataset_lock_sha256": "9cdda285aee64f1119554c40559be45e41799f8a1a19d4c4f53eff37868a8651",
+  "dependency_check": "All installed packages are compatible (60 packages)",
+  "full_training_launched": false,
+  "independent_rebuild_checksums_match": true,
+  "initial_smoke": {
+    "conversion": {
+      "dev": {
+        "bio_tokens": 13,
+        "entities": 2,
+        "retokenized_segments": 0,
+        "segments": 8,
+        "spacy_tokens": 13
+      },
+      "train": {
+        "bio_tokens": 71,
+        "entities": 26,
+        "retokenized_segments": 0,
+        "segments": 15,
+        "spacy_tokens": 71
+      }
+    },
+    "corpora_sha256": {
+      "dev": "e3a0bfd37bcf297fe4bb7b7637f02890094bbb846a3b8ac7881e80cf14f507f9",
+      "train": "003209cdad0e0a7592d9934a4b53e1333f9bc8e470fe149121a6a20931347e06"
+    },
+    "cuda_available": false,
+    "dataset_lock_sha256": "9cdda285aee64f1119554c40559be45e41799f8a1a19d4c4f53eff37868a8651",
+    "dev_ids": [
+      "seg-005788",
+      "seg-007779",
+      "seg-014098",
+      "seg-005731",
+      "seg-005740",
+      "seg-005814",
+      "seg-011897",
+      "seg-012703"
+    ],
+    "device": -1,
+    "encoder": {
+      "files": {
+        "config.json": "d66ed8cd4f2a93b358c245e50736fa389ed4f35c0bae7aad0b32abb20c62b579",
+        "model.safetensors": "6fd4797bc397c3b8b55d6bb5740366b57e6a3ce91c04c77f22aafc0c128e6feb",
+        "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+        "tokenizer.json": "a898ea75433890f6610f4e470b8ebeb0c21dce5c8dd61f892eb09eb5919d2e2c",
+        "tokenizer_config.json": "994f46754c5bf4014f1aa92d34b1374319c3a6b3f702105cd5b742beaecd18ce"
+      },
+      "repo_id": "FacebookAI/xlm-roberta-base",
+      "revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089"
+    },
+    "integration_approved": false,
+    "kind": "smoke",
+    "labels": [
+      "COUNTRY",
+      "CURRENCY",
+      "DAY",
+      "EQUIPMENT",
+      "EVENT",
+      "LOC",
+      "MISC",
+      "MONTH",
+      "ORG",
+      "PER",
+      "POLITICAL_PARTY",
+      "POSITION",
+      "RELIGION",
+      "SEASON",
+      "SPORT"
+    ],
+    "model_size_bytes": 1134752126,
+    "mps_available": true,
+    "note": "Two-step engineering smoke, not a trained quality baseline or test-set result.",
+    "original_config_sha256": "bec1d6c6d65b1bf563af3f18d44c9767457aeecf5a96e27e3a0c519216c6a389",
+    "platform": "macOS-15.3.2-arm64-arm-64bit",
+    "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+    "reload_and_inference_seconds": 14.800508166999862,
+    "returncode": 0,
+    "run_config_sha256": "9d6b2bf16faa74180d942fe081bb6ac82091875fe5595b24a39c45d987c6f0b4",
+    "seed": 1729,
+    "status": "smoke_validated",
+    "test_accessed": false,
+    "train_ids": [
+      "seg-015760",
+      "seg-006884",
+      "seg-016899",
+      "seg-000310",
+      "seg-000636",
+      "seg-002077",
+      "seg-003268",
+      "seg-001451",
+      "seg-001332",
+      "seg-004621",
+      "seg-004230",
+      "seg-005766",
+      "seg-002690",
+      "seg-000698",
+      "seg-015075"
+    ],
+    "training_peak_rss_bytes": 6465781760,
+    "training_wall_seconds": 13.024456749999445,
+    "versions": {
+      "numpy": "2.2.6",
+      "spacy": "3.8.7",
+      "spacy-transformers": "1.3.9",
+      "torch": "2.6.0",
+      "transformers": "4.49.0"
+    },
+    "wordpiece_preflight": {
+      "capacity": 512,
+      "max_wordpieces": 53,
+      "truncation": false,
+      "windows": 23
+    }
+  },
+  "integration_enabled": false,
+  "protected_files_unchanged": {
+    "artifacts/langid/experiments/baseline-v1/selection.lock.json": "065adcb60d43105477212f84362867afee208eb7466c73031a40f7096a3f751d",
+    "configs/langid/dataset-v1.lock.json": "3c14e07a4212e3e42e724aca4d5c819be31db3ed4db39f91828186e8bd2e039c",
+    "data/ner/raw/adyan.txt": "31fec7da9e6ec597eaa3977107bf8bece09da0f78fe09da98e06edd1e33f3847"
+  },
+  "requirements_lock_sha256": "8549ff777fddef15af19b0fd18856b4bb7c518d9f4e5e475c1833738d08c8ee7",
+  "smoke": {
+    "conversion": {
+      "dev": {
+        "bio_tokens": 13,
+        "entities": 2,
+        "retokenized_segments": 0,
+        "segments": 8,
+        "spacy_tokens": 13
+      },
+      "train": {
+        "bio_tokens": 71,
+        "entities": 26,
+        "retokenized_segments": 0,
+        "segments": 15,
+        "spacy_tokens": 71
+      }
+    },
+    "corpora_sha256": {
+      "dev": "e3a0bfd37bcf297fe4bb7b7637f02890094bbb846a3b8ac7881e80cf14f507f9",
+      "train": "003209cdad0e0a7592d9934a4b53e1333f9bc8e470fe149121a6a20931347e06"
+    },
+    "cuda_available": false,
+    "dataset_lock_sha256": "9cdda285aee64f1119554c40559be45e41799f8a1a19d4c4f53eff37868a8651",
+    "dev_ids": [
+      "seg-005788",
+      "seg-007779",
+      "seg-014098",
+      "seg-005731",
+      "seg-005740",
+      "seg-005814",
+      "seg-011897",
+      "seg-012703"
+    ],
+    "device": -1,
+    "encoder": {
+      "files": {
+        "config.json": "d66ed8cd4f2a93b358c245e50736fa389ed4f35c0bae7aad0b32abb20c62b579",
+        "model.safetensors": "6fd4797bc397c3b8b55d6bb5740366b57e6a3ce91c04c77f22aafc0c128e6feb",
+        "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+        "tokenizer.json": "a898ea75433890f6610f4e470b8ebeb0c21dce5c8dd61f892eb09eb5919d2e2c",
+        "tokenizer_config.json": "994f46754c5bf4014f1aa92d34b1374319c3a6b3f702105cd5b742beaecd18ce"
+      },
+      "repo_id": "FacebookAI/xlm-roberta-base",
+      "revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089"
+    },
+    "integration_approved": false,
+    "kind": "smoke",
+    "labels": [
+      "COUNTRY",
+      "CURRENCY",
+      "DAY",
+      "EQUIPMENT",
+      "EVENT",
+      "LOC",
+      "MISC",
+      "MONTH",
+      "ORG",
+      "PER",
+      "POLITICAL_PARTY",
+      "POSITION",
+      "RELIGION",
+      "SEASON",
+      "SPORT"
+    ],
+    "model_size_bytes": 1134752130,
+    "mps_available": true,
+    "note": "Two-step engineering smoke, not a trained quality baseline or test-set result.",
+    "original_config_sha256": "bec1d6c6d65b1bf563af3f18d44c9767457aeecf5a96e27e3a0c519216c6a389",
+    "platform": "macOS-15.3.2-arm64-arm-64bit",
+    "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+    "reload_and_inference_seconds": 13.605455999999322,
+    "returncode": 0,
+    "run_config_sha256": "569ae86274a984492ef516f5ea188b05a77442b7957184cd888c1ce50daa3d36",
+    "seed": 1729,
+    "status": "smoke_validated",
+    "test_accessed": false,
+    "train_ids": [
+      "seg-015760",
+      "seg-006884",
+      "seg-016899",
+      "seg-000310",
+      "seg-000636",
+      "seg-002077",
+      "seg-003268",
+      "seg-001451",
+      "seg-001332",
+      "seg-004621",
+      "seg-004230",
+      "seg-005766",
+      "seg-002690",
+      "seg-000698",
+      "seg-015075"
+    ],
+    "training_peak_rss_bytes": 6359203840,
+    "training_wall_seconds": 11.874710624999352,
+    "versions": {
+      "numpy": "2.2.6",
+      "spacy": "3.8.7",
+      "spacy-transformers": "1.3.9",
+      "torch": "2.6.0",
+      "transformers": "4.49.0"
+    },
+    "wordpiece_preflight": {
+      "capacity": 512,
+      "max_wordpieces": 53,
+      "truncation": false,
+      "windows": 23
+    }
+  },
+  "smoke_artifact_directory": "artifacts/ner/smoke-v2-final",
+  "smoke_weight_replay_identical": {
+    "ner/model": true,
+    "transformer/model": true
+  },
+  "source_sha256": "31fec7da9e6ec597eaa3977107bf8bece09da0f78fe09da98e06edd1e33f3847",
+  "test_set_model_predictions_made": false,
+  "tests": {
+    "api": {
+      "passed": 67
+    },
+    "ner_isolated": {
+      "passed": 9
+    },
+    "repository": {
+      "passed": 212,
+      "skip_reason": "spaCy absent from existing Language ID environment",
+      "skipped": 1
+    }
+  },
+  "validated_date": "2026-10-21"
+}

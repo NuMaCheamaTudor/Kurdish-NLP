@@ -138,6 +138,8 @@ node_modules/
 **/.next/
 coverage/
 *.tsbuildinfo
+**/test-results/
+**/playwright-report/
 
 # ==========================================
 # TEMPORARY FILES
@@ -151,3 +153,11 @@ coverage/
 *.pid
 .cache/
 tmp/
+
+# Sorani NER V2: isolated runtime, corpora, pretrained weights and checkpoints.
+.venv-ner/
+/data/ner/raw/
+/data/ner/builds/
+/data/ner/cache/
+/artifacts/ner/
+/models/ner/

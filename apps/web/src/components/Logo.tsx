@@ -1,0 +1,11 @@
+/** Three offset lines: text set right-to-left and left-to-right in one block. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden className={className}>
+      <rect width="32" height="32" rx="8" fill="#172A2E" />
+      <rect x="11" y="9" width="14" height="2.6" rx="1.3" fill="#F7F7F4" />
+      <rect x="7" y="14.7" width="14" height="2.6" rx="1.3" fill="#7FC4BC" />
+      <rect x="13" y="20.4" width="12" height="2.6" rx="1.3" fill="#F7F7F4" />
+    </svg>
+  );
+}

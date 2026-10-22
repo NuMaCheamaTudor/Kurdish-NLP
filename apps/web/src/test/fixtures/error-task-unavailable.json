@@ -1,0 +1,9 @@
+{
+    "error": {
+        "code": "task_unavailable",
+        "message": "NER model is not installed.",
+        "details": {
+            "task": "entities"
+        }
+    }
+}

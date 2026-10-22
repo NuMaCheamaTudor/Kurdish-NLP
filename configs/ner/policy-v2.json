@@ -1,0 +1,16 @@
+{
+  "version": "sorani-ner-v2.0",
+  "seed": 1729,
+  "tag_mapping": {"B-POLITICAL_PARY": "B-POLITICAL_PARTY", "I-POLITICAL_PARY": "I-POLITICAL_PARTY", "o": "O"},
+  "conflict_policy": "quarantine_all_raw_exact_text_annotation_variants",
+  "bio_policy": "quarantine_all_remaining_invalid_sequences_no_inferred_repairs",
+  "long_segment_tokens": 300,
+  "long_segment_policy": "flag_and_retain_use_transformer_windows",
+  "deduplication": "exact_original_token_sequence_after_conflict_quarantine",
+  "near_jaccard": 0.85,
+  "near_min_tokens": 8,
+  "near_shingle_width": 3,
+  "split_ratios": {"train": 0.8, "dev": 0.1, "test": 0.1},
+  "insufficient_train_entities": 50,
+  "insufficient_eval_entities": 20
+}

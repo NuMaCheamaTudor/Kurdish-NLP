@@ -1,0 +1,83 @@
+{
+    "task": "language",
+    "language": {
+        "code": "ckb",
+        "name": "Sorani",
+        "alt_name": "Central Kurdish",
+        "mode": "auto"
+    },
+    "detection": {
+        "language": {
+            "code": "ckb",
+            "name": "Sorani",
+            "alt_name": "Central Kurdish"
+        },
+        "is_reliable": true,
+        "abstained": false,
+        "reason": null,
+        "reason_message": null,
+        "confidence": 0.9999994898385924,
+        "margin": 0.9999989912837604,
+        "scores": [
+            {
+                "code": "ckb",
+                "name": "Sorani",
+                "score": 0.9999994898385924
+            },
+            {
+                "code": "sdh",
+                "name": "Southern Kurdish",
+                "score": 4.985548321393113e-07
+            },
+            {
+                "code": "tr",
+                "name": "Turkish",
+                "score": 7.867396783357392e-09
+            },
+            {
+                "code": "kmr",
+                "name": "Kurmanji",
+                "score": 9.34794755665978e-10
+            },
+            {
+                "code": "ar",
+                "name": "Arabic",
+                "score": 9.34794755665978e-10
+            },
+            {
+                "code": "fa",
+                "name": "Persian",
+                "score": 9.34794755665978e-10
+            },
+            {
+                "code": "en",
+                "name": "English",
+                "score": 9.34794755665978e-10
+            }
+        ],
+        "model": {
+            "id": "fasttext",
+            "name": "fastText",
+            "identifier": "kurdish-langid-baseline-v1-fasttext",
+            "version": "1.0.0"
+        },
+        "policy": {
+            "name": "tuned",
+            "calibrated": true,
+            "confidence_threshold": 0.0,
+            "margin_threshold": 0.0,
+            "minimum_letter_count": 3
+        },
+        "score_semantics": "calibrated score estimates; not guaranteed probabilities of correctness",
+        "warnings": [],
+        "input": {
+            "characters": 62,
+            "letters": 51,
+            "words": 11,
+            "script": "arabic"
+        },
+        "elapsed_ms": 0.348
+    },
+    "entities": null,
+    "grammar": null
+}

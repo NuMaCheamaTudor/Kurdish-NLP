@@ -1,0 +1,83 @@
+{
+    "task": "language",
+    "language": {
+        "code": "ckb",
+        "name": "Sorani",
+        "alt_name": "Central Kurdish",
+        "mode": "auto"
+    },
+    "detection": {
+        "language": {
+            "code": "ckb",
+            "name": "Sorani",
+            "alt_name": "Central Kurdish"
+        },
+        "is_reliable": true,
+        "abstained": false,
+        "reason": null,
+        "reason_message": null,
+        "confidence": 0.9999999181157415,
+        "margin": 0.9999998370867705,
+        "scores": [
+            {
+                "code": "ckb",
+                "name": "Sorani",
+                "score": 0.9999999181157415
+            },
+            {
+                "code": "sdh",
+                "name": "Southern Kurdish",
+                "score": 8.102897098452156e-08
+            },
+            {
+                "code": "fa",
+                "name": "Persian",
+                "score": 5.307344926400173e-10
+            },
+            {
+                "code": "ar",
+                "name": "Arabic",
+                "score": 1.2910068994815038e-10
+            },
+            {
+                "code": "kmr",
+                "name": "Kurmanji",
+                "score": 9.198373365790169e-11
+            },
+            {
+                "code": "tr",
+                "name": "Turkish",
+                "score": 6.943011516883452e-11
+            },
+            {
+                "code": "en",
+                "name": "English",
+                "score": 3.40386078865937e-11
+            }
+        ],
+        "model": {
+            "id": "tfidf_lr",
+            "name": "TF-IDF + LR",
+            "identifier": "kurdish-langid-baseline-v1-tfidf_lr",
+            "version": "1.0.0"
+        },
+        "policy": {
+            "name": "tuned",
+            "calibrated": true,
+            "confidence_threshold": 0.0,
+            "margin_threshold": 0.0,
+            "minimum_letter_count": 3
+        },
+        "score_semantics": "calibrated score estimates; not guaranteed probabilities of correctness",
+        "warnings": [],
+        "input": {
+            "characters": 62,
+            "letters": 51,
+            "words": 11,
+            "script": "arabic"
+        },
+        "elapsed_ms": 0.837
+    },
+    "entities": null,
+    "grammar": null
+}

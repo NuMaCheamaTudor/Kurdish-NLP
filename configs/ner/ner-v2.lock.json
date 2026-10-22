@@ -1,0 +1,41 @@
+{
+  "evaluation_scope": "lexical-duplicate-group-held-out segments; original documents unknown",
+  "files": {
+    "audit-issues.jsonl": "06538240a57af1fa54326c42edad47640578402bb5fde51824ec666810b37f78",
+    "audit.json": "9ab14ba710078ca975d6419e5e1d13a3dd861e80067a0b4c8d17465d3dea319c",
+    "cleaned.jsonl": "d30d4ac89b567837763950ba420b5aa9c2c83d2a069fdae3222f29d29e307180",
+    "dev.jsonl": "77dd6b3bb8b3d1279bba95861318efc4c0d600fad21024e0eaae07ef5183ea52",
+    "group-edges.jsonl": "6e724939162ec1bd17fe994be09cf4dfaa29d57a160b164a2902170a260b9c82",
+    "policy.json": "4129461fb2058fbf9d014f09dde4dad5baa55320e23ab848f2c8f669bcd3a232",
+    "provenance.jsonl": "0b91ddb8fd139d9b222f8d17b8537f8dfd91884aed2a34e006c08e8150123896",
+    "quarantine.jsonl": "083a1c8f600640018ff7b55336a5d3f528aa5cd0aeb7f49517da3973a793b01e",
+    "split-manifest.jsonl": "27210fcb0fcb2d8c514a732149a1917800dca998bbc53ef8c9d8b90ae5daf9e6",
+    "test.jsonl": "4355004aea33d74ad74bc23ae4ed510a287151ed73bd1b1ba0c4f8c89e3c3e5c",
+    "train.jsonl": "45a5cd3d403a311d10c696992ad0d5533a22f74f897332da381a64eae7a3cbb9"
+  },
+  "labels": [
+    "COUNTRY",
+    "CURRENCY",
+    "DAY",
+    "EQUIPMENT",
+    "EVENT",
+    "LOC",
+    "MISC",
+    "MONTH",
+    "ORG",
+    "PER",
+    "POLITICAL_PARTY",
+    "POSITION",
+    "RELIGION",
+    "SEASON",
+    "SPORT"
+  ],
+  "policy_sha256": "8c847a0fe727c34223a797e0a54a0232c1e798b6c2561544a7e21ba4492e0014",
+  "segments": {
+    "dev": 2058,
+    "test": 2145,
+    "train": 17396
+  },
+  "source_sha256": "31fec7da9e6ec597eaa3977107bf8bece09da0f78fe09da98e06edd1e33f3847",
+  "version": "sorani-ner-v2.0"
+}

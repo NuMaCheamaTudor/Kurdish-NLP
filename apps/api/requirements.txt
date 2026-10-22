@@ -1,0 +1,7 @@
+# API runtime. Install the ML package first from the repository root:
+#   pip install -e '.[experiments]'
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+# Tests
+httpx>=0.27,<1
+pytest>=8,<10

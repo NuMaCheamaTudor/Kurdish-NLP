@@ -1,0 +1,268 @@
+{
+    "models": [
+        {
+            "id": "tfidf_lr",
+            "name": "TF-IDF + LR",
+            "full_name": "TF-IDF + Logistic Regression",
+            "task": "language",
+            "description": "Character 1\u20135-gram TF-IDF features with multinomial logistic regression. Temperature-calibrated.",
+            "languages": [
+                "ckb",
+                "kmr",
+                "sdh",
+                "ar",
+                "fa",
+                "tr",
+                "en"
+            ],
+            "status": "ready",
+            "default": true,
+            "unavailable_reasons": [],
+            "identifier": "kurdish-langid-baseline-v1-tfidf_lr",
+            "version": "1.0.0",
+            "experiment": "baseline-v1",
+            "framework": "scikit-learn",
+            "size_bytes": 18136824,
+            "temperature": 0.69098,
+            "policies": [
+                {
+                    "name": "tuned",
+                    "calibrated": true,
+                    "confidence_threshold": 0.0,
+                    "margin_threshold": 0.0,
+                    "minimum_letter_count": 3
+                },
+                {
+                    "name": "reference",
+                    "calibrated": false,
+                    "confidence_threshold": 0.7,
+                    "margin_threshold": 0.2,
+                    "minimum_letter_count": 3
+                }
+            ],
+            "artifact_sha256": "a33e4a98e43d42ff6fa184db78dc3947fdbdc0507844b70584b8bb5c00516e76",
+            "internal_test": {
+                "scope": "internal",
+                "dataset": "dataset-v1 1.0.0",
+                "records": 12467,
+                "macro_f1": 0.996516,
+                "accuracy": 0.996952
+            },
+            "external_benchmarks": [
+                {
+                    "name": "UD v2.18 Southern Kurdish (Garrusi)",
+                    "description": "Written in Latin script; all Southern Kurdish training data is in Arabic script.",
+                    "records": 217,
+                    "expected_label": "sdh",
+                    "recall": 0.0,
+                    "correct": 0
+                }
+            ]
+        },
+        {
+            "id": "fasttext",
+            "name": "fastText",
+            "full_name": "fastText",
+            "task": "language",
+            "description": "fastText supervised classifier with character 3\u20136-grams. Temperature-calibrated.",
+            "languages": [
+                "ckb",
+                "kmr",
+                "sdh",
+                "ar",
+                "fa",
+                "tr",
+                "en"
+            ],
+            "status": "ready",
+            "default": false,
+            "unavailable_reasons": [],
+            "identifier": "kurdish-langid-baseline-v1-fasttext",
+            "version": "1.0.0",
+            "experiment": "baseline-v1",
+            "framework": "fastText",
+            "size_bytes": 181771932,
+            "temperature": 1.270355,
+            "policies": [
+                {
+                    "name": "tuned",
+                    "calibrated": true,
+                    "confidence_threshold": 0.0,
+                    "margin_threshold": 0.0,
+                    "minimum_letter_count": 3
+                },
+                {
+                    "name": "reference",
+                    "calibrated": false,
+                    "confidence_threshold": 0.7,
+                    "margin_threshold": 0.2,
+                    "minimum_letter_count": 3
+                }
+            ],
+            "artifact_sha256": "a7047c8cf67a8cb3c89652e605dc5229e19c5413431948deef9afb7a3baff8c0",
+            "internal_test": {
+                "scope": "internal",
+                "dataset": "dataset-v1 1.0.0",
+                "records": 12467,
+                "macro_f1": 0.99458,
+                "accuracy": 0.995268
+            },
+            "external_benchmarks": [
+                {
+                    "name": "UD v2.18 Southern Kurdish (Garrusi)",
+                    "description": "Written in Latin script; all Southern Kurdish training data is in Arabic script.",
+                    "records": 217,
+                    "expected_label": "sdh",
+                    "recall": 0.009217,
+                    "correct": 2
+                }
+            ]
+        },
+        {
+            "id": "kurdish-ner-v1",
+            "name": "Sorani NER",
+            "full_name": "Sorani NER",
+            "task": "entities",
+            "description": "spaCy pipeline with an XLM-RoBERTa encoder for Sorani named entities.",
+            "languages": [
+                "ckb"
+            ],
+            "status": "unavailable",
+            "default": false,
+            "unavailable_reasons": [
+                "Transformer weights are missing from this checkout.",
+                "spaCy is not installed."
+            ],
+            "identifier": null,
+            "version": null,
+            "experiment": null,
+            "framework": "spaCy",
+            "size_bytes": null,
+            "temperature": null,
+            "policies": [],
+            "artifact_sha256": null,
+            "internal_test": null,
+            "external_benchmarks": []
+        },
+        {
+            "id": "kurdish-pos-v1",
+            "name": "Kurmanji grammar",
+            "full_name": "Kurmanji grammar",
+            "task": "grammar",
+            "description": "spaCy pipeline with an XLM-RoBERTa encoder for Kurmanji POS tags, morphology and dependencies.",
+            "languages": [
+                "kmr"
+            ],
+            "status": "unavailable",
+            "default": false,
+            "unavailable_reasons": [
+                "Transformer weights are missing from this checkout.",
+                "spaCy is not installed."
+            ],
+            "identifier": null,
+            "version": null,
+            "experiment": null,
+            "framework": "spaCy",
+            "size_bytes": null,
+            "temperature": null,
+            "policies": [],
+            "artifact_sha256": null,
+            "internal_test": null,
+            "external_benchmarks": []
+        }
+    ],
+    "tasks": [
+        {
+            "id": "language",
+            "name": "Language",
+            "available": true,
+            "message": null,
+            "languages": [
+                "ckb",
+                "kmr",
+                "sdh",
+                "ar",
+                "fa",
+                "tr",
+                "en"
+            ]
+        },
+        {
+            "id": "entities",
+            "name": "Named entities",
+            "available": false,
+            "message": "NER model is not installed.",
+            "languages": []
+        },
+        {
+            "id": "grammar",
+            "name": "Grammar",
+            "available": false,
+            "message": "Grammar model is not installed.",
+            "languages": []
+        }
+    ],
+    "languages": [
+        {
+            "code": "ckb",
+            "name": "Sorani",
+            "alt_name": "Central Kurdish",
+            "kurdish": true,
+            "script": "Arabic",
+            "direction": "rtl"
+        },
+        {
+            "code": "kmr",
+            "name": "Kurmanji",
+            "alt_name": "Northern Kurdish",
+            "kurdish": true,
+            "script": "Latin",
+            "direction": "ltr"
+        },
+        {
+            "code": "sdh",
+            "name": "Southern Kurdish",
+            "alt_name": null,
+            "kurdish": true,
+            "script": "Arabic",
+            "direction": "rtl"
+        },
+        {
+            "code": "ar",
+            "name": "Arabic",
+            "alt_name": null,
+            "kurdish": false,
+            "script": "Arabic",
+            "direction": "rtl"
+        },
+        {
+            "code": "fa",
+            "name": "Persian",
+            "alt_name": null,
+            "kurdish": false,
+            "script": "Arabic",
+            "direction": "rtl"
+        },
+        {
+            "code": "tr",
+            "name": "Turkish",
+            "alt_name": null,
+            "kurdish": false,
+            "script": "Latin",
+            "direction": "ltr"
+        },
+        {
+            "code": "en",
+            "name": "English",
+            "alt_name": null,
+            "kurdish": false,
+            "script": "Latin",
+            "direction": "ltr"
+        }
+    ],
+    "limits": {
+        "max_text_chars": 5000
+    },
+    "default_model": "tfidf_lr",
+    "documentation_url": "https://github.com/NuMaCheamaTudor/Kurdish-NLP/blob/main/docs/language-identification.md"
+}

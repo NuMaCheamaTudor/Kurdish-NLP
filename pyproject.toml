@@ -25,10 +25,26 @@ experiments = [
 ]
 wikimedia = ["mwparserfromhell>=0.7,<1"]
 dev = ["pytest>=8,<10", "mwparserfromhell>=0.7,<1"]
+ner = [
+    "spacy==3.8.7",
+    "spacy-transformers==1.3.9",
+    "transformers==4.49.0",
+    "torch==2.6.0",
+    "numpy==2.2.6",
+    "sentencepiece==0.2.0",
+    "protobuf==5.29.4",
+    "huggingface-hub==0.29.3",
+    "safetensors==0.5.3",
+    "tokenizers==0.21.1",
+    "typer==0.15.2",
+    "click==8.1.8",
+    "weasel==0.4.1",
+]
 
 [project.scripts]
 kurdish-langid-data = "kurdish_nlp.langid.cli:main"
 kurdish-langid-experiment = "kurdish_nlp.langid.experiments.runner:main"
+kurdish-ner = "kurdish_nlp.ner.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
