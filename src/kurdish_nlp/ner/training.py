@@ -110,11 +110,13 @@ def validate_encoder(encoder: Path) -> dict:
     return spec
 
 
-def wordpiece_check(records, nlp, encoder: Path, window: int, stride: int) -> dict:
+def wordpiece_check(
+    records, nlp, encoder: Path, window: int, stride: int, *, tokenizer=None
+) -> dict:
     from spacy_transformers.span_getters import get_strided_spans
     from transformers import AutoTokenizer
 
-    tokenizer = AutoTokenizer.from_pretrained(
+    tokenizer = tokenizer or AutoTokenizer.from_pretrained(
         str(encoder), local_files_only=True, use_fast=True
     )
     limit = min(512, tokenizer.model_max_length)

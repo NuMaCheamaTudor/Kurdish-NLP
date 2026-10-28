@@ -24,6 +24,8 @@ def atomic_json(path: Path, value) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.partial")
     dump(temporary, value)
+    with temporary.open("rb") as stream:
+        os.fsync(stream.fileno())
     os.replace(temporary, path)
 
 
@@ -44,6 +46,20 @@ def safe_name(name: str) -> str:
     return str(path)
 
 
+def validate_code_manifest(manifest: dict) -> None:
+    payload = {k: v for k, v in manifest.items() if k != "content_sha256"}
+    digest = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    if digest != manifest["content_sha256"]:
+        raise ValueError("Code manifest content identity mismatch")
+    if any(
+        not Path(name).is_file() or sha256(Path(name)) != expected
+        for name, expected in manifest["files"].items()
+    ):
+        raise ValueError("Source checkout changed since capsule creation")
+
+
 def prepare_capsule(repo: Path, output: Path) -> dict:
     """Allowlist source only: no raw data, weights, credentials or Git internals."""
     if output.exists():
@@ -56,8 +72,8 @@ def prepare_capsule(repo: Path, output: Path) -> dict:
         *repo.glob("configs/ner/*"),
         repo / "scripts/ner_download_encoder.py",
         repo / "scripts/ner_colab_environment.py",
-        repo / "tests/test_ner_colab_numerics.py",
-        repo / "tests/test_ner_colab_dlpack.py",
+        *repo.glob("tests/test_ner*.py"),
+        *repo.glob("docs/sorani-ner-v2*.md"),
         repo / "pyproject.toml",
         repo / "README.md",
     ]
@@ -69,7 +85,7 @@ def prepare_capsule(repo: Path, output: Path) -> dict:
     manifest = {
         "format": 1,
         "base_git_commit": revision,
-        "revision_note": "Base commit plus exact allowlisted working-tree content; includes uncommitted NER preparation.",
+        "revision_note": "Base commit plus exact allowlisted working-tree content, including NER continued-training/state modules, regressions and procedures.",
         "files": {p.relative_to(repo).as_posix(): sha256(p) for p in files},
     }
     payload = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
@@ -313,15 +329,21 @@ def backup_run(
     return published
 
 
-def restore_run(drive_run: Path, output: Path) -> Path:
+def restore_run(
+    drive_run: Path, output: Path, *, generation: str | None = None
+) -> Path:
     if output.exists():
         raise FileExistsError("Restore into a new local directory")
-    pointer = json.loads((drive_run / "latest.json").read_text())
-    generation = safe_name(pointer["generation"])
+    pointer = (
+        json.loads((drive_run / "latest.json").read_text())
+        if generation is None
+        else None
+    )
+    generation = safe_name(pointer["generation"] if pointer else generation)
     if "/" in generation or not re.fullmatch(r"step-\d{8}-[0-9a-f]{8}", generation):
         raise ValueError("Invalid snapshot pointer")
     source = drive_run / generation
-    if sha256(source / "COMPLETE.json") != pointer["complete_sha256"]:
+    if pointer and sha256(source / "COMPLETE.json") != pointer["complete_sha256"]:
         raise ValueError("Backup pointer checksum mismatch")
     validate_snapshot(source)
     stage = output.with_name(f".{output.name}-{uuid.uuid4().hex}.partial")
@@ -335,7 +357,7 @@ def restore_run(drive_run: Path, output: Path) -> Path:
         drive_run / "test-evaluation.json",
         drive_run / "test-evaluation.receipt.json",
     )
-    if report_path.exists() and receipt_path.exists():
+    if pointer and report_path.exists() and receipt_path.exists():
         receipt = json.loads(receipt_path.read_text())
         if (
             not (output / "selection.lock.json").exists()

@@ -6,18 +6,22 @@ import argparse
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 
-def install(repo: Path, environment: Path) -> Path:
+def install(repo: Path, environment: Path, python_version: str = "3.12") -> Path:
+    if not re.fullmatch(r"3\.12(?:\.\d+)?", python_version):
+        raise ValueError("Select Python 3.12 or an exact 3.12 patch version")
+    requested = tuple(map(int, python_version.split(".")))
     if platform.system() != "Linux" or platform.machine() != "x86_64":
         raise RuntimeError("Install only in the Linux x86_64 Colab runtime")
     print("Notebook Python:", platform.python_version(), flush=True)
     python = environment / "bin/python"
     if not python.exists():
-        if sys.version_info[:2] == (3, 12):
+        if sys.version_info[: len(requested)] == requested:
             subprocess.run([sys.executable, "-m", "venv", str(environment)], check=True)
         else:
             # New Colab Python versions need not force an unvalidated model stack.
@@ -45,7 +49,7 @@ def install(repo: Path, environment: Path) -> Path:
                     "venv",
                     "--seed",
                     "--python",
-                    "3.12",
+                    python_version,
                     str(environment),
                 ],
                 env=env,
@@ -60,12 +64,12 @@ def install(repo: Path, environment: Path) -> Path:
             [
                 str(python),
                 "-c",
-                "import sys,json;print(json.dumps(list(sys.version_info[:2])))",
+                "import sys,json;print(json.dumps(list(sys.version_info[:3])))",
             ],
             text=True,
         )
     )
-    if version != [3, 12]:
+    if tuple(version[: len(requested)]) != requested:
         raise RuntimeError(
             "Existing training interpreter is incompatible; choose a new environment path"
         )
@@ -101,5 +105,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--environment", type=Path, required=True)
+    parser.add_argument("--python-version", default="3.12")
     args = parser.parse_args()
-    install(args.repo, args.environment)
+    install(args.repo, args.environment, args.python_version)

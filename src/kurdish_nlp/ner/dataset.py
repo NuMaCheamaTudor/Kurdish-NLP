@@ -12,7 +12,12 @@ LABEL = re.compile(r"[BI]-[A-Z][A-Z_]*\Z")
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    """Hash both small release files and multi-GB checkpoints with bounded RAM."""
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(8 * 1024**2), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def parse_bio(path: Path) -> list[dict]:

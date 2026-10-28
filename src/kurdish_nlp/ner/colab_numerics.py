@@ -293,6 +293,7 @@ def checked_update(
             raise NumericalFailure("nonfinite_forward", {"tensor": "last_hidden_state"})
 
     hook = hf.register_forward_hook(forward_check)
+    nlp._ner_v2_in_update = True
     try:
         for attempt in range(policy.get("max_overflow_retries", 8) + 1):
             random.setstate(rng[0])
@@ -422,6 +423,7 @@ def checked_update(
         clear_gradients(nlp, hf)
         hook.remove()
         shim._grad_scaler = scaler
+        nlp._ner_v2_in_update = False
 
 
 def install_training_loop(policy, diagnostic_path):

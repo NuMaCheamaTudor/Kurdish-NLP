@@ -15,6 +15,7 @@ import platform
 import random
 import re
 import resource
+import shutil
 import subprocess
 import sys
 import time
@@ -27,6 +28,7 @@ from .colab_artifacts import (
     atomic_json,
     backup_run,
     hashes,
+    validate_code_manifest,
     validate_pipeline_files,
 )
 from .colab_numerics import (
@@ -208,11 +210,42 @@ def prepare(args):
         raise ValueError("Official dataset lock changed")
     lock = verify(args.data, args.lock, args.source)
     encoder = validate_encoder(args.encoder)
-    args.run.mkdir(parents=True)
     base = load_config("configs/ner/xlmr-v2.cfg")
+    warm = getattr(args, "snapshot", None)
+    stateful = bool(warm or getattr(args, "resumable", False))
+    source_model = source_marker = None
+    if warm:
+        from .continued import verified_source
+
+        for output in (args.run, args.drive):
+            if output.resolve().is_relative_to(
+                warm.resolve()
+            ) or warm.resolve().is_relative_to(output.resolve()):
+                raise ValueError(
+                    "Output must not overlap the immutable source snapshot"
+                )
+        source_model, source_marker = verified_source(
+            warm, args.role, run_id=args.original_run, generation=args.generation
+        )
+        source_state = json.loads((warm / "run.json").read_text())
+        if source_state["dataset_lock_sha256"] != sha256(args.lock):
+            raise ValueError("Warm-start source used a different dataset")
+        base = load_config(source_model / "config.cfg")
+        source_policy = json.loads((warm / "runtime-policy.json").read_text())
+        if (
+            source_policy.get("gradient_checkpointing")
+            and not args.gradient_checkpointing
+        ):
+            raise ValueError("Preserve source gradient checkpointing")
+        if (
+            base["components"]["transformer"]["model"]["mixed_precision"]
+            != args.mixed_precision
+        ):
+            raise ValueError("Preserve the source checkpoint's FP16 mode")
+    args.run.mkdir(parents=True)
     cfg = base.copy()
-    # Preserve objective, LR, epoch cap, patience and windowing. These are operational
-    # GPU placement / memory controls only; any variation is explicitly recorded.
+    # Preserve the serialized component architecture. Optimizer/schedule and
+    # operational differences are recorded separately from the source config.
     cfg["system"]["gpu_allocator"] = "pytorch"
     cfg["training"]["gpu_allocator"] = "pytorch"
     cfg["training"]["accumulate_gradient"] = args.accumulate
@@ -241,6 +274,27 @@ def prepare(args):
         "overflow": "discard_both_components_and_replay_same_batch",
         "windows": "reject_truncation_and_verify_all_window_counts",
     }
+    if stateful:
+        policy.update(
+            state_format=2,
+            checkpoint_frequency=getattr(args, "checkpoint_frequency", 200),
+            schedule={
+                "peak": getattr(args, "learning_rate", 5e-6) if warm else 2e-5,
+                "warmup": getattr(args, "warmup", 200),
+                "total": getattr(args, "updates", 2000) if warm else 20000,
+            },
+        )
+    from .training_state import learning_rate
+
+    if stateful:
+        learning_rate(policy["schedule"], 0)
+        cfg["training"]["max_steps"] = policy["schedule"]["total"]
+        cfg["training"]["optimizer"]["learn_rate"] = learning_rate(
+            policy["schedule"], 0
+        )
+    if warm:
+        cfg["training"]["patience"] = args.patience
+        cfg["training"]["eval_frequency"] = args.eval_frequency
     dump(args.run / "runtime-policy.json", policy)
     cfg.to_disk(args.run / "config.cfg")
     changes = {}
@@ -255,6 +309,11 @@ def prepare(args):
                 changes[name] = {"base": x, "effective": y}
 
     differences(base, cfg)
+    if stateful:
+        changes["runtime.training_loop"] = {
+            "base": "spaCy zero-based steps; opaque epoch iterator; weights-only saves",
+            "effective": "completed update counts; persisted padded batch plan; positive first warmup update; full-state generations; strict dev F1 improvement; dev evaluation every eval_frequency completed updates",
+        }
     changes["runtime.microbatch_subdivision"] = {
         "base": "spaCy 3.8.7 can leave a small batch unsplit when accumulation exceeds record count",
         "effective": "bound every microbatch including uneven remainders to max(1, records // accumulation); effective batch, optimizer update count and schedule unchanged",
@@ -269,6 +328,7 @@ def prepare(args):
         subprocess.check_output([sys.executable, "-m", "pip", "freeze"], text=True)
     )
     code = json.loads(Path("code-manifest.json").read_text())
+    validate_code_manifest(code)
     dump(args.run / "code-manifest.json", code)
     state = {
         "run_id": args.run.name,
@@ -286,10 +346,69 @@ def prepare(args):
         "working_tree_content_sha256": code["content_sha256"],
         "labels": lock["labels"],
         "test_predictions_made": False,
-        "exact_resume_supported": False,
-        "restart_policy": "new run, pinned pretrained encoder, fresh optimizer and scheduler",
+        "exact_resume_supported": stateful,
+        "numerical_reproducibility": "full state recovery; CUDA bitwise equality is not guaranteed"
+        if stateful
+        else "weights-only; new-run restart required",
+        "state_drive": str((args.drive / "training-state").resolve())
+        if stateful
+        else None,
+        "restart_policy": "resume verified full state only; weights-only requires a new warm-start run"
+        if stateful
+        else "new run, pinned pretrained encoder, fresh optimizer and scheduler",
         "microbatch_workaround": "spaCy 3.8.7 microbatches bounded to max(1, records // accumulation), including small batches and uneven remainders; effective batch/optimizer schedule unchanged",
     }
+    if warm:
+        from .training_state import weight_fingerprints
+
+        # These are private local copies. The verified original is only read.
+        shutil.copytree(source_model, args.run / "initial-model")
+        shutil.copytree(warm / "checkpoints/model-best", args.run / "baseline-model")
+        if hashes(args.run / "initial-model") != hashes(source_model) or hashes(
+            args.run / "baseline-model"
+        ) != hashes(warm / "checkpoints/model-best"):
+            raise ValueError("Incomplete warm-start checkpoint copy")
+        best_meta = json.loads((warm / "checkpoints/model-best/meta.json").read_text())
+        observed = best_meta.get("performance", {}).get("ents_f")
+        if observed is None or not math.isclose(
+            float(observed) / 100, args.baseline_f1, abs_tol=0.00005
+        ):
+            raise ValueError(
+                "Source model-best metadata does not match declared baseline F1"
+            )
+        model = spacy.load(args.run / "initial-model")
+        if sorted(model.get_pipe("ner").labels) != lock["labels"]:
+            raise ValueError("Warm-start labels differ from frozen release")
+        state["warm_start"] = {
+            "original_run": source_marker["run_id"],
+            "checkpoint_generation": args.generation,
+            "source_step": source_marker.get("step", source_marker.get("updates")),
+            "source_resume_state": source_marker["resume_state"],
+            "source_config_sha256": sha256(source_model / "config.cfg"),
+            "source_complete_sha256": sha256(warm / "COMPLETE.json"),
+            "source_model_role": args.role,
+            "source_model_files": hashes(source_model),
+            "initial_weights": weight_fingerprints(model),
+            "strategy": "spacy.load; preserve components/tokenizer/vocab/moves; fresh Adam and positive warmup-linear schedule",
+            "optimizer_restored": False,
+            "baseline_model_files": hashes(warm / "checkpoints/model-best"),
+        }
+        state["baseline_f1"] = args.baseline_f1
+        state["baseline_exact_f1"] = float(observed) / 100
+        dump(
+            args.run / "baseline.json",
+            {
+                "dev_entity_f1": args.baseline_f1,
+                "dev_entity_f1_unrounded": state["baseline_exact_f1"],
+                "original_best_step": 5400
+                if source_marker["run_id"] == "sorani-ner-v2-t4-20261022-104347"
+                else source_state.get("best_update"),
+                "source": state["warm_start"],
+                "test_predictions_made": False,
+            },
+        )
+        del model
+        gc.collect()
     atomic_json(args.run / "run.json", state)
     print(
         json.dumps(
@@ -305,10 +424,8 @@ def load_run(args):
     environment = gpu_environment()
     state = json.loads((args.run / "run.json").read_text())
     code = json.loads((args.run / "code-manifest.json").read_text())
-    if any(
-        not Path(name).is_file() or sha256(Path(name)) != digest
-        for name, digest in code["files"].items()
-    ):
+    validate_code_manifest(code)
+    if code["content_sha256"] != state["working_tree_content_sha256"]:
         raise ValueError(
             "Source checkout changed since preparation; create a new verified run"
         )
@@ -323,7 +440,9 @@ def load_run(args):
         )
     verify(args.data, args.lock, args.source)
     for split, digest in state["corpora_sha256"].items():
-        if not (args.run / f"{split}.spacy").exists() and state["status"] == "trained":
+        if not (args.run / f"{split}.spacy").exists() and (
+            state["status"] == "trained" or state.get("exact_resume_supported")
+        ):
             # Backup generations intentionally omit corpus text. Rehydrate only
             # from the already verified release, then require identical bytes.
             import spacy
@@ -336,7 +455,8 @@ def load_run(args):
         if sha256(args.run / f"{split}.spacy") != digest:
             raise ValueError("Run corpus changed")
     cfg = load_config(args.run / "config.cfg")
-    validate_encoder(Path(cfg["components"]["transformer"]["model"]["name"]))
+    if not state.get("warm_start") and getattr(args, "command", "") != "resume":
+        validate_encoder(Path(cfg["components"]["transformer"]["model"]["name"]))
     register_logger()
     install_microbatch_guard()
     install_window_guard()
@@ -353,6 +473,12 @@ def _examples(nlp, records):
 
 def _update(nlp, batch, optimizer, cfg):
     cuda_model(nlp)
+    if "schedule" in nlp._ner_v2_policy:
+        from .training_state import learning_rate
+
+        optimizer.learn_rate = learning_rate(
+            nlp._ner_v2_policy["schedule"], getattr(nlp, "_ner_v2_update_index", 0)
+        )
     result = checked_update(
         nlp,
         batch,
@@ -375,7 +501,6 @@ def preflight(args):
     import spacy
     import torch
     from spacy.tokens import DocBin
-    from spacy.training.initialize import init_nlp
     from spacy.util import registry
 
     state, cfg, environment = load_run(args)
@@ -398,7 +523,9 @@ def preflight(args):
     try:
         if args.stage == "smoke":
             # Init all real labels from the actual train DocBin, without any test data.
-            nlp = init_nlp(cfg, use_gpu=0)
+            from .continued import load_initial
+
+            nlp = load_initial(args.run, cfg, state)
             report["runtime"] = runtime_model(nlp, args)
             if sorted(nlp.get_pipe("ner").labels) != state["labels"]:
                 raise ValueError("Initialization dropped a legitimate entity type")
@@ -419,8 +546,18 @@ def preflight(args):
             batch = _examples(nlp, selected[:4])
             weight = hf.encoder.layer[0].attention.self.query.weight
             before = weight.detach().clone()
+            from .training_state import fresh_optimizer, weight_fingerprints
+
+            initial = weight_fingerprints(nlp)
+            if state.get("exact_resume_supported"):
+                optimizer = fresh_optimizer(nlp, nlp._ner_v2_policy["schedule"])
             torch.cuda.reset_peak_memory_stats()
             updates = [_update(nlp, batch, optimizer, cfg) for _ in range(3)]
+            after = weight_fingerprints(nlp)
+            if any(initial[k] == after[k] for k in ("transformer", "ner")):
+                raise RuntimeError(
+                    "Smoke did not update both transformer and NER weights"
+                )
             if torch.equal(before, weight.detach()):
                 raise RuntimeError(
                     "CUDA optimizer did not change transformer parameters"
@@ -454,11 +591,19 @@ def preflight(args):
             report.update(
                 updates=updates,
                 transformer_weight_changed=True,
+                initial_weights=initial,
+                updated_weights=after,
+                source_weights_equal=initial
+                == state.get("warm_start", {}).get("initial_weights")
+                if state.get("warm_start")
+                else None,
                 reload_predictions_equal=True,
                 prediction_example=payload,
                 checkpoint_bytes=size,
                 checkpoints_active_bytes=2 * size,
                 drive_two_generations_bytes=4 * size,
+                full_state_estimated_generation_bytes=4 * size,
+                full_state_retention="all verified generations retained; provision disk and Drive capacity",
             )
         else:
             spacy.require_gpu(0)
@@ -557,7 +702,8 @@ def preflight(args):
                 seconds_per_update = seconds / len(measured)
                 max_updates = min(
                     epoch_batches * cfg["training"]["max_epochs"],
-                    cfg["training"]["max_steps"] + 1,
+                    cfg["training"]["max_steps"]
+                    + (0 if state.get("exact_resume_supported") else 1),
                 )
                 report.update(
                     updates=timings,
@@ -606,6 +752,11 @@ def gate(args) -> dict:
             or report.get("runtime_policy_sha256") != state.get("runtime_policy_sha256")
             or not report.get("updates")
             or any(u.get("optimizer_updates") != 1 for u in report["updates"])
+            or (
+                state.get("warm_start")
+                and stage == "smoke"
+                and not report.get("source_weights_equal")
+            )
         ):
             raise ValueError(
                 "All three preflights must pass on the unchanged effective configuration"
@@ -628,6 +779,17 @@ def full_train(args):
             "No pseudo-resume: full training starts only in a fresh prepared run"
         )
     _, cfg, _ = load_run(args)
+    # Must follow anti-resume validation and precede every spaCy checkpoint write.
+    (args.run / "checkpoints").mkdir()
+    if state.get("exact_resume_supported"):
+        from .continued import train_run
+
+        _window_preflight(args, state, cfg)
+        gc.collect()
+        import torch
+
+        torch.cuda.empty_cache()
+        return train_run(args, state, cfg)
     # All train/dev wordpiece windows must fit; no transformer truncation accepted.
     encoder = Path(cfg["components"]["transformer"]["model"]["name"])
     wp = wordpiece_check(
@@ -664,6 +826,84 @@ def full_train(args):
         state.update(status="interrupted_or_failed", error_type=type(error).__name__)
         atomic_json(args.run / "run.json", state)
         raise
+
+
+def _window_preflight(args, state, cfg):
+    import spacy
+
+    from .continued import load_initial
+
+    # Warm-start checks use the saved tokenizer, not a fresh blank tokenizer.
+    nlp = (
+        load_initial(args.run, cfg, state)
+        if state.get("warm_start")
+        else spacy.blank("xx")
+    )
+    window = cfg["components"]["transformer"]["model"]["get_spans"]
+    tokenizer = (
+        nlp.get_pipe("transformer").model.tokenizer if state.get("warm_start") else None
+    )
+    state["wordpiece_preflight"] = wordpiece_check(
+        [r for s in ("train", "dev") for r in read_jsonl(args.data / f"{s}.jsonl")],
+        nlp,
+        Path(cfg["components"]["transformer"]["model"]["name"]),
+        window["window"],
+        window["stride"],
+        tokenizer=tokenizer,
+    )
+    atomic_json(args.run / "run.json", state)
+
+
+def resume(args):
+    from .continued import train_run
+
+    state = gate(args)
+    if not state.get("exact_resume_supported") or state["status"] not in {
+        "running",
+        "interrupted_or_failed",
+    }:
+        raise ValueError(
+            "True resume requires an interrupted full-state run; no weights-only fallback"
+        )
+    _, cfg, _ = load_run(args)
+    (args.run / "checkpoints").mkdir(exist_ok=True)
+    return train_run(args, state, cfg, resume=True)
+
+
+def compare_dev(args):
+    """Development-only comparison; no test-set selection or tuning."""
+    import spacy
+
+    from .continued import identity
+    from .training_state import latest_generation, validate_generation
+
+    state, cfg, _ = load_run(args)
+    generation = (
+        latest_generation(args.run / "state-checkpoints")
+        if (args.run / "state-checkpoints/latest.json").exists()
+        else args.run
+    )
+    validate_generation(generation, identity(state))
+    nlp = spacy.load(generation / "checkpoints/model-best")
+    runtime_model(nlp, args)
+    scores = nlp.evaluate(
+        _examples(nlp, read_jsonl(args.data / "dev.jsonl")),
+        batch_size=cfg["nlp"]["batch_size"],
+    )
+    result = {
+        "run_id": state["run_id"],
+        "baseline_f1": state.get("baseline_f1"),
+        "baseline_exact_f1": state.get("baseline_exact_f1"),
+        "selected_dev_f1": scores["ents_f"] / 100,
+        "test_predictions_made": False,
+        "model_files": hashes(generation / "checkpoints/model-best"),
+    }
+    if state.get("baseline_f1") is not None:
+        result["delta_f1"] = result["selected_dev_f1"] - state["baseline_f1"]
+        result["delta_f1_unrounded"] = result["selected_dev_f1"] - state.get(
+            "baseline_exact_f1", state["baseline_f1"]
+        )
+    print(json.dumps(result, indent=2))
 
 
 def export_model(args):
@@ -768,7 +1008,17 @@ def main():
     bootstrap()
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("environment", "prepare", "preflight", "gate", "train", "export"):
+    for name in (
+        "environment",
+        "prepare",
+        "prepare-continued",
+        "preflight",
+        "gate",
+        "train",
+        "resume",
+        "compare-dev",
+        "export",
+    ):
         p = commands.add_parser(name)
         p.add_argument("--run", type=Path)
         p.add_argument("--source", type=Path, default=Path("data/ner/raw/adyan.txt"))
@@ -778,7 +1028,7 @@ def main():
         p.add_argument(
             "--lock", type=Path, default=Path("configs/ner/ner-v2.lock.json")
         )
-        if name == "prepare":
+        if name in {"prepare", "prepare-continued"}:
             p.add_argument("--encoder", type=Path, required=True)
             p.add_argument("--drive", type=Path, required=True)
             p.add_argument("--accumulate", type=int, default=4, choices=(4, 8, 16, 32))
@@ -787,6 +1037,26 @@ def main():
             )
             p.add_argument("--mixed-precision", action="store_true")
             p.add_argument("--gradient-checkpointing", action="store_true")
+            p.add_argument("--checkpoint-frequency", type=int, default=200)
+        if name == "prepare":
+            p.add_argument(
+                "--resumable",
+                action="store_true",
+                help="Opt in to full training-state checkpoints; default preserves the original notebook workflow",
+            )
+        if name == "prepare-continued":
+            p.add_argument("--snapshot", type=Path, required=True)
+            p.add_argument(
+                "--role", choices=("model-last", "model-best"), default="model-last"
+            )
+            p.add_argument("--original-run", required=True)
+            p.add_argument("--generation", required=True)
+            p.add_argument("--baseline-f1", type=float, default=0.8733)
+            p.add_argument("--learning-rate", type=float, default=5e-6)
+            p.add_argument("--warmup", type=int, default=200)
+            p.add_argument("--updates", type=int, default=2000)
+            p.add_argument("--patience", type=int, default=600)
+            p.add_argument("--eval-frequency", type=int, default=200)
         if name == "preflight":
             p.add_argument(
                 "--stage", choices=("smoke", "stress", "benchmark"), required=True
@@ -794,6 +1064,13 @@ def main():
         if name == "export":
             p.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    if args.command != "environment" and args.run is None:
+        parser.error("--run is required")
+    for name in ("checkpoint_frequency", "updates", "patience", "eval_frequency"):
+        if hasattr(args, name) and getattr(args, name) <= 0:
+            parser.error(f"--{name.replace('_', '-')} must be positive")
+    if hasattr(args, "baseline_f1") and not 0 <= args.baseline_f1 <= 1:
+        parser.error("--baseline-f1 must be in [0, 1]")
     os.environ.update(
         HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", TOKENIZERS_PARALLELISM="false"
     )
@@ -806,7 +1083,10 @@ def main():
     else:
         if args.run is None:
             parser.error("--run is required")
-        result = globals()[args.command](args)
+        action = {"prepare-continued": prepare, "compare-dev": compare_dev}.get(
+            args.command
+        )
+        result = (action or globals()[args.command])(args)
         if args.command == "gate":
             print(json.dumps(result, indent=2))
 

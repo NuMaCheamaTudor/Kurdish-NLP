@@ -17,11 +17,16 @@ def main():
         type=Path,
         default=Path("artifacts/ner/colab-stress-fix/sorani-ner-v2-code.zip"),
     )
+    parser.add_argument(
+        "--skip-notebook-update",
+        action="store_true",
+        help="Build a new capsule without editing either existing notebook",
+    )
     args = parser.parse_args()
     result = prepare_capsule(Path.cwd(), args.output)
     args.output.with_suffix(".sha256").write_text(result["archive_sha256"] + "\n")
     notebook = Path("notebooks/sorani_ner_v2_colab.ipynb")
-    if notebook.is_file():
+    if notebook.is_file() and not args.skip_notebook_update:
         content = json.loads(notebook.read_text())
         identity = next(
             c
